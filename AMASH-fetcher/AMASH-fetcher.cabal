@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4fca4a1809c35ef3232df8f2511c964f9f9392b8f7360c8cf968e5a3eec26dad
+-- hash: f5975d9d8ff2416ad542041b945a531d477dcebed0529d2ab5dd258cf59ab3dd
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -44,6 +44,7 @@ executable AMASH-fetcher-exe
   build-depends:
       AMASH-fetcher
     , base >=4.7 && <5
+    , wreq
   default-language: Haskell2010
 
 test-suite AMASH-fetcher-test
