@@ -1,8 +1,9 @@
 -- | Contains URIs for the Atlassian Marketplace REST API
 module MarketplaceURIs (
         appVersions,
+        appVersionLatest,
         appVersionByBuildNumber,
-        appVersionLatest
+        appVersionByVersion
     ) where
 
 -----------------------------------------------------------------------
@@ -26,9 +27,11 @@ appVersionLatest :: [Char] -> [Char]
 appVersionLatest addonKey = appVersions addonKey ++ "/latest"
 
 -- https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-build-pluginBuildNumber-get
+-- Build Number die man aus anderen calls kriegt, also z.B. "3005000020"
 appVersionByBuildNumber :: [Char] -> [Char] -> [Char]
 appVersionByBuildNumber addonKey buildNumber = appVersions addonKey ++ "/build/" ++ buildNumber
 
 -- https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-name-name-get
-appVersionByBuildNumber :: [Char] -> [Char] -> [Char]
+-- Tatsächliche Version also z.B. "3.6.1"
+appVersionByVersion :: [Char] -> [Char] -> [Char]
 appVersionByVersion addonKey version = appVersions addonKey ++ "/name/" ++ version
