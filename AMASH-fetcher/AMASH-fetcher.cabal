@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f5975d9d8ff2416ad542041b945a531d477dcebed0529d2ab5dd258cf59ab3dd
+-- hash: 08987e45f601a0650de4394328ac5a5f3e164bfa63c811ad314b48034a5fd6b8
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -26,6 +26,8 @@ source-repository head
 library
   exposed-modules:
       Lib
+      MarketplaceURIs
+      WreqUtil
   other-modules:
       Paths_AMASH_fetcher
   hs-source-dirs:
@@ -44,6 +46,9 @@ executable AMASH-fetcher-exe
   build-depends:
       AMASH-fetcher
     , base >=4.7 && <5
+    , bytestring
+    , lens
+    , lens-aeson
     , wreq
   default-language: Haskell2010
 
