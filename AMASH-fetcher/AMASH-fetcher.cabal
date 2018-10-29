@@ -1,0 +1,61 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 19df373168539afb296553d9f62f5695fefe6a0581a77351e5e306f05c1ba74b
+
+name:           AMASH-fetcher
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/AMASH-fetcher#readme>
+homepage:       https://github.com/githubuser/AMASH-fetcher#readme
+bug-reports:    https://github.com/githubuser/AMASH-fetcher/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2018 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/AMASH-fetcher
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_AMASH_fetcher
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable AMASH-fetcher-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_AMASH_fetcher
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      AMASH-fetcher
+    , base >=4.7 && <5
+  default-language: Haskell2010
+
+test-suite AMASH-fetcher-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_AMASH_fetcher
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      AMASH-fetcher
+    , base >=4.7 && <5
+  default-language: Haskell2010
