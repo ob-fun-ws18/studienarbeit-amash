@@ -21,11 +21,14 @@ appURI addonKey = baseURI "/addons/" ++ addonKey
 appVersions :: [Char] -> [Char]
 appVersions addonKey = appURI addonKey ++ "/versions"
 
--- https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-build-pluginBuildNumber-get
-appVersionByBuildNumber :: [Char] -> [Char] -> [Char]
-appVersionByBuildNumber addonKey buildNumber = appVersions addonKey ++ "/build/" ++ buildNumber
-
 -- https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-latest-get
 appVersionLatest :: [Char] -> [Char]
 appVersionLatest addonKey = appVersions addonKey ++ "/latest"
 
+-- https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-build-pluginBuildNumber-get
+appVersionByBuildNumber :: [Char] -> [Char] -> [Char]
+appVersionByBuildNumber addonKey buildNumber = appVersions addonKey ++ "/build/" ++ buildNumber
+
+-- https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-name-name-get
+appVersionByBuildNumber :: [Char] -> [Char] -> [Char]
+appVersionByVersion addonKey version = appVersions addonKey ++ "/name/" ++ version
