@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 858872f03b0ad453b32c25811d9f332e91bb5b56bf42cfb6a8b4f74939d1930e
+-- hash: 32af786bb6bc942bb256dca6a0b5c001f191e906719158aa5ed29a05a636f181
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -37,6 +37,7 @@ library
     , bytestring
     , lens
     , lens-aeson
+    , unordered-containers
     , wreq
   default-language: Haskell2010
 
@@ -53,6 +54,7 @@ executable AMASH-fetcher-exe
     , bytestring
     , lens
     , lens-aeson
+    , unordered-containers
     , wreq
   default-language: Haskell2010
 
@@ -73,6 +75,7 @@ test-suite AMASH-fetcher-test
     , hspec
     , lens
     , lens-aeson
+    , unordered-containers
     , wreq
   default-language: Haskell2010
 
@@ -91,5 +94,6 @@ benchmark AMASH-fetcher-benchmark
     , criterion
     , lens
     , lens-aeson
+    , unordered-containers
     , wreq
   default-language: Haskell2010

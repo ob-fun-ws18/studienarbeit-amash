@@ -25,6 +25,7 @@ dependencies:
 - lens
 - bytestring
 - lens-aeson
+- unordered-containers
 
 library:
   source-dirs: src
@@ -43,6 +44,7 @@ executables:
     - lens
     - bytestring
     - lens-aeson
+    - unordered-containers
 
 tests:
   AMASH-fetcher-test:
