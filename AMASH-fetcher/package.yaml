@@ -6,8 +6,6 @@ author:              "Sven Schatter"
 maintainer:          "sven.schatter@gmail.com"
 copyright:           "2018 Sven Schatter"
 
-windows-formatting-fix: "without this ignored line stack output will be weirdly formatted... don't know why :("
-
 extra-source-files:
 - README.md
 - ChangeLog.md
