@@ -11,8 +11,10 @@ import Data.Aeson.Lens (_String, key)
 
 main :: IO ()
 main = do
-    r <- get $ MarketplaceURIs.app "de.scandio.confluence.plugins.pocketquery"
+    let uri = MarketplaceURIs.app "de.scandio.confluence.plugins.pocketquery"
+    r <- get uri
     -- print $ responseGetBody r
     print $ responseIsOkay r
     print $ responseGetStatus r
-    print $ r ^. responseBody . key "vendorLinks" . key "privacy" . _String
+    -- print $ r ^. responseBody . key "vendorLinks" . key "privacy" . _String
+    putStrLn $ "URI: " ++ uri
