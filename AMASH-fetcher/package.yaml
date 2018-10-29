@@ -36,6 +36,8 @@ executables:
     dependencies:
     - AMASH-fetcher
     - wreq
+    - lens
+    - bytestring
 
 tests:
   AMASH-fetcher-test:
