@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 08987e45f601a0650de4394328ac5a5f3e164bfa63c811ad314b48034a5fd6b8
+-- hash: 858872f03b0ad453b32c25811d9f332e91bb5b56bf42cfb6a8b4f74939d1930e
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -34,6 +34,10 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , lens
+    , lens-aeson
+    , wreq
   default-language: Haskell2010
 
 executable AMASH-fetcher-exe
@@ -65,7 +69,11 @@ test-suite AMASH-fetcher-test
       AMASH-fetcher
     , QuickCheck
     , base >=4.7 && <5
+    , bytestring
     , hspec
+    , lens
+    , lens-aeson
+    , wreq
   default-language: Haskell2010
 
 benchmark AMASH-fetcher-benchmark
@@ -79,5 +87,9 @@ benchmark AMASH-fetcher-benchmark
   build-depends:
       AMASH-fetcher
     , base >=4.7 && <5
+    , bytestring
     , criterion
+    , lens
+    , lens-aeson
+    , wreq
   default-language: Haskell2010
