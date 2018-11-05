@@ -14,6 +14,6 @@ square n = n^2
 readConfig :: IO [String] -- ^ List of plugin keys
 readConfig = do
     args <- getArgs
-    if length args > 0
+    if not (null args)
     then return args
-    else readFile "plugins.config" >>= return . lines
+    else lines <$> readFile "plugins.config"

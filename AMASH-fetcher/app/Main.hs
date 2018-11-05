@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Main where
 
@@ -17,7 +17,7 @@ main :: IO ()
 main = readConfig >>= mapM_ getPluginData
 
 -- | Gets and prints the data for a given plugin key (e.g. "de.scandio.confluence.plugins.pocketquery")
-getPluginData :: [Char] -> IO ()
+getPluginData :: String -> IO ()
 getPluginData plugin = do
     let uri = URIs.app plugin
         getJSON = simpleHttp uri -- TODO: error handling on HTTP code 4xx
