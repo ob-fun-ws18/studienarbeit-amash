@@ -26,6 +26,3 @@ main = do
 
     let link = (snd $ vendorLinks !! 1) ^. _String
     print link
-
-    l <- get $ pack link
-    print l
