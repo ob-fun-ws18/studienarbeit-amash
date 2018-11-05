@@ -1,33 +1,32 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, DeriveGeneric #-}
 
 module Main where
 
-import Lib (readConfig)
-import Network.Wreq
-import Control.Lens
-import WreqUtil
-import MarketplaceURIs
-import Data.Aeson.Lens
-import Control.Monad (mapM_)
+import Data.Aeson
+import Data.Text
+import Control.Applicative
+import Control.Monad
+import Network.HTTP.Conduit (simpleHttp)
 
-import qualified Data.HashMap.Strict as HM
+import Lib (readConfig)
+
+import AMASH.Types
+import qualified AMASH.URIs as URIs
 
 main :: IO ()
 main = readConfig >>= mapM_ getPluginData
 
--- | Gets and prints the data for a plugin key (e.g. "de.scandio.confluence.plugins.pocketquery")
+-- | Gets and prints the data for a given plugin key (e.g. "de.scandio.confluence.plugins.pocketquery")
 getPluginData :: [Char] -> IO ()
 getPluginData plugin = do
-    let uri = MarketplaceURIs.app $ plugin
-    r <- get uri
-    -- print $ responseGetBody r
-    print $ responseIsOkay r
-    print $ responseGetStatus r
-    -- print $ r ^. responseBody . key "vendorLinks" . key "privacy" . _String
-    putStrLn $ "URI: " ++ uri
+    let uri = URIs.app plugin
+        getJSON = simpleHttp uri -- TODO: error handling on HTTP code 4xx
 
-    let vendorLinks = HM.toList $ r ^. responseBody . key "vendorLinks" . _Object
-    print vendorLinks
+    e <- (eitherDecode <$> getJSON) :: IO (Either String AppInfo)
 
-    let link = (snd $ vendorLinks !! 1) ^. _String
-    print link
+    case e of
+        Left err -> putStrLn err
+        Right appInfo -> do
+            putStrLn "\nGot AppInfo for: " 
+            print $ name appInfo
+            -- print $ encode appInfo

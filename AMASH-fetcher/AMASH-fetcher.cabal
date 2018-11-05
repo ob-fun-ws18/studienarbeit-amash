@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 32af786bb6bc942bb256dca6a0b5c001f191e906719158aa5ed29a05a636f181
+-- hash: 090c8c0d420d76300d0a7619fcb126d29ae6427a2c60f6bf56497f5c43112192
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -25,20 +25,19 @@ source-repository head
 
 library
   exposed-modules:
+      AMASH.Types
+      AMASH.URIs
       Lib
-      MarketplaceURIs
-      WreqUtil
   other-modules:
       Paths_AMASH_fetcher
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
-    , lens
-    , lens-aeson
-    , unordered-containers
-    , wreq
+    , http-conduit
+    , text
   default-language: Haskell2010
 
 executable AMASH-fetcher-exe
@@ -50,12 +49,11 @@ executable AMASH-fetcher-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       AMASH-fetcher
+    , aeson
     , base >=4.7 && <5
     , bytestring
-    , lens
-    , lens-aeson
-    , unordered-containers
-    , wreq
+    , http-conduit
+    , text
   default-language: Haskell2010
 
 test-suite AMASH-fetcher-test
@@ -70,13 +68,12 @@ test-suite AMASH-fetcher-test
   build-depends:
       AMASH-fetcher
     , QuickCheck
+    , aeson
     , base >=4.7 && <5
     , bytestring
     , hspec
-    , lens
-    , lens-aeson
-    , unordered-containers
-    , wreq
+    , http-conduit
+    , text
   default-language: Haskell2010
 
 benchmark AMASH-fetcher-benchmark
@@ -89,11 +86,10 @@ benchmark AMASH-fetcher-benchmark
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       AMASH-fetcher
+    , aeson
     , base >=4.7 && <5
     , bytestring
     , criterion
-    , lens
-    , lens-aeson
-    , unordered-containers
-    , wreq
+    , http-conduit
+    , text
   default-language: Haskell2010
