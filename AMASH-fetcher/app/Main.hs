@@ -10,7 +10,7 @@ import Network.HTTP.Conduit (simpleHttp)
 
 import Lib (readConfig)
 
-import AMASH.Types
+import AMASH.Types.App
 import qualified AMASH.URIs as URIs
 
 main :: IO ()
@@ -22,11 +22,14 @@ getPluginData plugin = do
     let uri = URIs.app plugin
         getJSON = simpleHttp uri -- TODO: error handling on HTTP code 4xx
 
-    e <- (eitherDecode <$> getJSON) :: IO (Either String AppInfo)
+    e <- (eitherDecode <$> getJSON) :: IO (Either String App)
 
     case e of
         Left err -> putStrLn err
         Right appInfo -> do
-            putStrLn "\nGot AppInfo for: " 
+            putStrLn "\n------------------------------"
+            putStrLn "Got AppInfo for: "
             print $ name appInfo
-            -- print $ encode appInfo
+            putStrLn ""
+            print appInfo
+            putStrLn "------------------------------"
