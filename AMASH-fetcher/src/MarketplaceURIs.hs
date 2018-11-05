@@ -23,7 +23,7 @@ baseURI = "https://marketplace.atlassian.com/rest/2"
 -----------------------------------------------------------------------
 
 -- | Provides the Atlassian Marketplace REST base URI.
--- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-get
+-- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-get
 app :: [Char] -> [Char]
 app ""       = error "Empty addon key not allowed for URI buildung!"
 app addonKey = baseURI ++ "/addons/" ++ addonKey
