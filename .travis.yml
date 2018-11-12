@@ -32,12 +32,14 @@ script:
 # Build the package, its tests and run the tests
 - cd AMASH-fetcher
 - stack --no-terminal test --haddock --no-haddock-deps --coverage
-- mv `stack path --local-doc-root` docs/amash-fetcher/doc
-- stack bench --benchmark-arguments="-o docs/amash-fetcher/report.html"
-- mv `stack path --local-hpc-root` docs/amash-fetcher/hpc
+- mkdir -p ../docs/amash-fetcher/doc
+- mv `stack path --local-doc-root` ../docs/amash-fetcher/doc
+- stack bench --benchmark-arguments="-o ../docs/amash-fetcher/report.html"
+- mkdir -p ../docs/amash-fetcher/hpc
+- mv `stack path --local-hpc-root` ../docs/amash-fetcher/hpc
 - travis_retry curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s .
-- ln -s 'stack path --local-doc-root' docs
 - cd ..
+- ln -s 'stack path --local-doc-root' docs
 
 deploy:
   provider: pages # speziell für GitHub Pages
