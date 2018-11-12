@@ -39,10 +39,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - AMASH-fetcher
-    - aeson
-    - text   
-    - bytestring
-    - http-conduit
 
 tests:
   AMASH-fetcher-test:
