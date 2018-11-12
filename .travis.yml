@@ -38,8 +38,8 @@ script:
 - mkdir -p ../docs/amash-fetcher/hpc
 - mv `stack path --local-hpc-root` ../docs/amash-fetcher/hpc
 - travis_retry curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s .
+- ln -s 'stack path --local-doc-root' ../docs/amash-fetcher
 - cd ..
-- ln -s 'stack path --local-doc-root' docs
 
 deploy:
   provider: pages # speziell für GitHub Pages
