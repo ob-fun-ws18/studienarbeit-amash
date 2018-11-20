@@ -10,7 +10,7 @@ import Network.HTTP.Conduit (simpleHttp)
 
 import Lib (readConfig)
 
-import AMASH.Types.App
+import AMASH.Data.App
 import qualified AMASH.URIs as URIs
 
 main :: IO ()

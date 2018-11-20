@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module AMASH.Types.App.AddonDistributionSummary where
+module AMASH.Data.App.AddonDistributionSummary where
 
 import Data.Text
 import Data.Aeson

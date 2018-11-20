@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module AMASH.Types.App.VendorLinks where
+module AMASH.Data.App.VendorLinks where
 
 import Data.Text
 import Data.Aeson

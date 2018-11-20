@@ -1,13 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module AMASH.Types.App where
+module AMASH.Data.App where
 
 import Data.Text
 import Data.Aeson
 import GHC.Generics
 
-import AMASH.Types.App.VendorLinks
-import AMASH.Types.App.AppEmbedded
+import AMASH.Data.App.VendorLinks
+import AMASH.Data.App.AppEmbedded
 
 data App = App { name :: Text
                , key :: Text

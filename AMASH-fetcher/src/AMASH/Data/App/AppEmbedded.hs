@@ -1,14 +1,14 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module AMASH.Types.App.AppEmbedded where
+module AMASH.Data.App.AppEmbedded where
 
 import Data.Text
 import Data.Aeson
 import GHC.Generics
 
-import AMASH.Types.App.ImageAssetSummary
-import AMASH.Types.App.AddonCategorySummary
-import AMASH.Types.App.AddonDistributionSummary
+import AMASH.Data.App.ImageAssetSummary
+import AMASH.Data.App.AddonCategorySummary
+import AMASH.Data.App.AddonDistributionSummary
 
 data AppEmbedded = AppEmbedded { banner :: Maybe ImageAssetSummary
                                , categories :: Maybe [AddonCategorySummary]

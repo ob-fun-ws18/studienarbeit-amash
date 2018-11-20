@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module AMASH.Types.App.ImageAssetSummary where
+module AMASH.Data.App.ImageAssetSummary where
 
 import Data.Text
 import Data.Aeson
