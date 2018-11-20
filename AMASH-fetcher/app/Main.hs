@@ -31,5 +31,6 @@ getPluginData plugin = do
             putStrLn "Got AppInfo for: "
             print $ name appInfo
             putStrLn ""
+            -- putStrLn $ show $ toEncoding appInfo
             print appInfo
             putStrLn "------------------------------"
