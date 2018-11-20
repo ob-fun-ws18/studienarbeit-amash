@@ -47,8 +47,4 @@ createStorableApp app = StorableApp {
 
 unpackCategories :: Maybe [AddonCategorySummary.AddonCategorySummary] -> [Text]
 unpackCategories Nothing = []
-unpackCategories (Just categories) = unpackCategories' categories
-
-unpackCategories' :: [AddonCategorySummary.AddonCategorySummary] -> [Text]
-unpackCategories' [] = []
-unpackCategories' (x:xs) = AddonCategorySummary.name x : unpackCategories' xs
+unpackCategories (Just categories) = Prelude.map AddonCategorySummary.name categories
