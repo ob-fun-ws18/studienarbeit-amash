@@ -33,6 +33,7 @@ library
       AMASH.Data.App.StorableImageAssetSummary
       AMASH.Data.App.VendorLinks
       AMASH.Data.StorableApp
+      AMASH.Data.Vendor
       AMASH.URIs
       Lib
   other-modules:

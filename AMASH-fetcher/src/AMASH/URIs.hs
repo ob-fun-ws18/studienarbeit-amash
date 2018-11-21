@@ -11,7 +11,9 @@ module AMASH.URIs (
         appDistribution,
         appPricing,
         appRecommendations,
-        appReviews
+        appReviews,
+
+        vendor
     ) where
 
 -----------------------------------------------------------------------
@@ -70,6 +72,9 @@ appReviews addonKey = app addonKey ++ "/reviews"
 
 -----------------------------------------------------------------------
 
--- TODO: Vendors https://developer.atlassian.com/platform/marketplace/rest/#api-group-Vendors
+-- | https://developer.atlassian.com/platform/marketplace/rest/#api-vendors-vendorId-get
+vendor :: String -> String
+vendor vendorId = baseURI ++ "/vendors/" ++ vendorId
+
 -- TODO: app rankings / getApps -> atlassian, codegeist, featured, highest-rated, name, new, popular, recent, top-grossing, top-vendor, trending, verified
 

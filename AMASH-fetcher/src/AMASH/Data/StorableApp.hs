@@ -8,8 +8,8 @@ import GHC.Generics
 import Data.Time.Clock
 
 import qualified AMASH.Data.App as App
-import AMASH.Data.App.VendorLinks
-import AMASH.Data.App.AddonDistributionSummary
+import qualified AMASH.Data.App.VendorLinks as VendorLinks
+import qualified AMASH.Data.App.AddonDistributionSummary as AddonDistributionSummary
 import qualified AMASH.Data.App.AppEmbedded as AppEmbedded
 import qualified AMASH.Data.App.AddonCategorySummary as AddonCategorySummary
 import qualified AMASH.Data.App.StorableImageAssetSummary as StorableImageAssetSummary
@@ -19,13 +19,13 @@ import qualified AMASH.Data.App.StorableImageAssetSummary as StorableImageAssetS
 data StorableApp = StorableApp { name :: Text
                , summary :: Text
                , tagLine :: Text
-               , vendorLinks :: VendorLinks
+               , vendorLinks :: VendorLinks.VendorLinks
                , lastModified :: UTCTime
                , banner :: Maybe StorableImageAssetSummary.StorableImageAssetSummary
                , categories :: [Text]
                , logo :: Maybe StorableImageAssetSummary.StorableImageAssetSummary
                , titleLogo :: Maybe StorableImageAssetSummary.StorableImageAssetSummary
-               , distribution :: Maybe AddonDistributionSummary
+               , distribution :: Maybe AddonDistributionSummary.AddonDistributionSummary
                } deriving (Show, Eq, Generic)
 
 instance FromJSON StorableApp
