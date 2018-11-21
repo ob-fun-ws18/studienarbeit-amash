@@ -68,7 +68,7 @@ Vagrant.configure("2") do |config|
       sleep 30
       echo "Waited 30 seconds!"
       echo "Executing init script..."
-      sudo mongo --host localhost --port 27017 < /vagrant/init-mongo.js
+      sudo sed 's/\r$//' /vagrant/init-mongo.js | sudo mongo --host localhost --port 27017
 	  sudo service mongod stop
 	  echo "Copying mongod.conf from repository to /etc/mongod.conf!"
 	  sudo cp /vagrant/mongod.conf /etc/mongod.conf
