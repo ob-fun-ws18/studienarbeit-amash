@@ -13,6 +13,8 @@ import qualified AMASH.Data.App.AppEmbedded as AppEmbedded
 import qualified AMASH.Data.App.AddonCategorySummary as AddonCategorySummary
 import qualified AMASH.Data.App.StorableImageAssetSummary as StorableImageAssetSummary
 
+-- TODO: Versions, VersionLatest, AppPricing, AppRecommendations, AppReviews
+
 data StorableApp = StorableApp { name :: Text
                , summary :: Text
                , tagLine :: Text
