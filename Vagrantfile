@@ -49,6 +49,7 @@ Vagrant.configure("2") do |config|
   #
   #   # Customize the amount of memory on the VM:
       vb.memory = "2048"
+      vb.cpus = 2
     end
   #
   # View the documentation for the provider you are using for more
@@ -62,9 +63,16 @@ Vagrant.configure("2") do |config|
 	  echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
       sudo apt-get update
       sudo apt-get install mongodb-org -y --force-yes
-      sudo service mongod stop
-      sudo sed -i '/bindIp/d' /etc/mongod.conf
       sudo service mongod start
+      echo "Giving mongo some time to fully initialize..."
+      sleep 30
+      echo "Waited 30 seconds!"
+      echo "Executing init script..."
+      sudo mongo --host localhost --port 27017 < /vagrant/init-mongo.js
+	  sudo service mongod stop
+	  echo "Copying mongod.conf from repository to /etc/mongod.conf!"
+	  sudo cp /vagrant/mongod.conf /etc/mongod.conf
+	  sudo service mongod start
       echo "Mongo started!"
     SHELL
 end
