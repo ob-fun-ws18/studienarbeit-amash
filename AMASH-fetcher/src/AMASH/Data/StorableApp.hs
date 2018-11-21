@@ -5,6 +5,7 @@ module AMASH.Data.StorableApp where
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import Data.Time.Clock
 
 import qualified AMASH.Data.App as App
 import AMASH.Data.App.VendorLinks
@@ -19,7 +20,7 @@ data StorableApp = StorableApp { name :: Text
                , summary :: Text
                , tagLine :: Text
                , vendorLinks :: VendorLinks
-               , lastModified :: Text -- format: date-time e.g.: "2018-10-03T00:17:34.548Z"
+               , lastModified :: UTCTime
                , banner :: Maybe StorableImageAssetSummary.StorableImageAssetSummary
                , categories :: [Text]
                , logo :: Maybe StorableImageAssetSummary.StorableImageAssetSummary

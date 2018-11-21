@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 754eab77edfda51dbadc900e481aef3ac06ea7546de3d6ae7148856ea3b2c8b9
+-- hash: 818d23f1dc1f7651a6a06f1c864dcb71c0ae29227be42808ec0675f3b05ad52d
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -45,6 +45,7 @@ library
     , bytestring
     , http-conduit
     , text
+    , time
   default-language: Haskell2010
 
 executable AMASH-fetcher-exe
@@ -61,6 +62,7 @@ executable AMASH-fetcher-exe
     , bytestring
     , http-conduit
     , text
+    , time
   default-language: Haskell2010
 
 test-suite AMASH-fetcher-test
@@ -81,6 +83,7 @@ test-suite AMASH-fetcher-test
     , hspec
     , http-conduit
     , text
+    , time
   default-language: Haskell2010
 
 benchmark AMASH-fetcher-benchmark
@@ -99,4 +102,5 @@ benchmark AMASH-fetcher-benchmark
     , criterion
     , http-conduit
     , text
+    , time
   default-language: Haskell2010
