@@ -26,6 +26,9 @@ dependencies:
 - bytestring
 - http-conduit
 - time
+- mongoDB
+- mtl
+#- AesonBson
 
 library:
   source-dirs: src

@@ -1,5 +1,5 @@
 -- | A Lib module.
-module Lib (square, fetchVendorMetaData, fetchPluginMetaData, readConfig) where
+module Lib (square, fetchVendorMetaData, fetchPluginMetaData) where
 
 import System.Environment (getArgs)
 import Data.Aeson
@@ -19,15 +19,6 @@ square :: Num a
     => a -- ^ The number
     -> a -- ^ The square
 square n = n^2
-
--- | Read config (plugin keys) either from args or from the file "plugins.config" if there are no args
--- | TODO: Read config from MongoDB instead.
-readConfig :: IO [String] -- ^ List of plugin keys
-readConfig = do
-    args <- getArgs
-    if not (Prelude.null args)
-    then return args
-    else Prelude.lines <$> readFile "plugins.config"
 
 -- | Fetches and prints the metadata for a given vendor id (e.g. "1210714")
 fetchVendorMetaData :: String -> IO ()

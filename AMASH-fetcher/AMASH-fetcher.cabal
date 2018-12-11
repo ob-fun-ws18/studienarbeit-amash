@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 818d23f1dc1f7651a6a06f1c864dcb71c0ae29227be42808ec0675f3b05ad52d
+-- hash: 7a757701b41757359fb00e15efb9f4361fcd825522f2491bbba304a364eaf926
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      AMASH.Config
       AMASH.Data.App
       AMASH.Data.App.AddonCategorySummary
       AMASH.Data.App.AddonDistributionSummary
@@ -34,6 +35,12 @@ library
       AMASH.Data.App.VendorLinks
       AMASH.Data.StorableApp
       AMASH.Data.Vendor
+      AMASH.Data.Vendor.Address
+      AMASH.Data.Vendor.VendorCloudSecurity
+      AMASH.Data.Vendor.VendorExternalLinks
+      AMASH.Data.Vendor.VendorPrograms
+      AMASH.Data.Vendor.VendorSolutionPartner
+      AMASH.Data.Vendor.VendorSupportDetails
       AMASH.URIs
       Lib
   other-modules:
@@ -45,6 +52,8 @@ library
     , base >=4.7 && <5
     , bytestring
     , http-conduit
+    , mongoDB
+    , mtl
     , text
     , time
   default-language: Haskell2010
@@ -52,6 +61,7 @@ library
 executable AMASH-fetcher-exe
   main-is: Main.hs
   other-modules:
+      MongoTest
       Paths_AMASH_fetcher
   hs-source-dirs:
       app
@@ -62,6 +72,8 @@ executable AMASH-fetcher-exe
     , base >=4.7 && <5
     , bytestring
     , http-conduit
+    , mongoDB
+    , mtl
     , text
     , time
   default-language: Haskell2010
@@ -83,6 +95,8 @@ test-suite AMASH-fetcher-test
     , bytestring
     , hspec
     , http-conduit
+    , mongoDB
+    , mtl
     , text
     , time
   default-language: Haskell2010
@@ -102,6 +116,8 @@ benchmark AMASH-fetcher-benchmark
     , bytestring
     , criterion
     , http-conduit
+    , mongoDB
+    , mtl
     , text
     , time
   default-language: Haskell2010
