@@ -21,5 +21,8 @@ fetchAllPlugins pipe = do
     plugins <- getAllPlugins pipe
     mapM_ fetchPluginMetaData plugins
 
+    vendors <- getAllVendors pipe
+    mapM_ fetchVendorMetaData vendors
+
 fetchScandio = fetchVendorMetaData "1210714"
 fetchPocketQuery = fetchPluginMetaData "de.scandio.confluence.plugins.pocketquery"

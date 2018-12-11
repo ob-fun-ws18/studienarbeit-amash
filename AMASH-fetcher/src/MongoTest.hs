@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ExtendedDefaultRules #-}
 
-module MongoTest (MongoTest.connect, authenticate, getAllPlugins) where
+module MongoTest (MongoTest.connect, authenticate, getAllPlugins, getAllVendors) where
 
 import Database.MongoDB
 import Control.Monad.Trans (liftIO)
@@ -21,9 +21,12 @@ authenticate pipe = do
     pw <- Config.getPassword
     access pipe master "admin" $ auth user pw
 
-getAllPlugins pipe = do
-    pluginValues <- access pipe master "amash" $ find (select [] "plugins") >>= rest
-    return $ map (unValue . valueAt "key") pluginValues
+getAllKeys pipe collection = do
+    bsonValues <- access pipe master "amash" $ find (select [] collection) >>= rest
+    return $ map (unValue . valueAt "key") bsonValues
+
+getAllPlugins pipe = getAllKeys pipe "plugins"
+getAllVendors pipe = getAllKeys pipe "vendors"
 
 -- Unpack from BSON Value
 unValue (String text) = Text.unpack text
