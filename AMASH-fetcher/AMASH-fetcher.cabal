@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7a757701b41757359fb00e15efb9f4361fcd825522f2491bbba304a364eaf926
+-- hash: 9ec343eb3ed632f2997b002f09f310287f13ffb5d0aa59c2c4ff1e13bca585ae
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -43,6 +43,7 @@ library
       AMASH.Data.Vendor.VendorSupportDetails
       AMASH.URIs
       Lib
+      MongoTest
   other-modules:
       Paths_AMASH_fetcher
   hs-source-dirs:
@@ -61,7 +62,6 @@ library
 executable AMASH-fetcher-exe
   main-is: Main.hs
   other-modules:
-      MongoTest
       Paths_AMASH_fetcher
   hs-source-dirs:
       app

@@ -8,28 +8,32 @@ import Data.Maybe
 import Database.MongoDB
 import Text.Read
 import Data.Text
+import Text.Read (readMaybe)
 
+-- | Get the value of a environment variable or a default value instead if it doesn't exist.
+getEnvOrDefault :: String -- ^ The name of the environment variable
+                -> String -- ^ The default value
+                -> IO String -- ^ Either the value of the environment variable or the default value
 getEnvOrDefault envName defaultValue = do
    maybeEnv <- lookupEnv envName
    return $ maybe defaultValue id maybeEnv
 
+-- | Returns the IP used to connect to the AMASH MongoDB database.
+getIP :: IO String -- ^ The IP read from the env var "AMASH_MONGO_IP" or "127.0.0.1" if the var is empty.
 getIP = getEnvOrDefault "AMASH_MONGO_IP" "127.0.0.1"
 
-getPort :: IO PortID
-getPort = return $ PortNumber 27017
-
-{-
-Nach 1,5h rumfailen geb ich's jetzt mal auf...
-https://www.reddit.com/r/haskell/comments/490z3x/newbie_portnumber_from_a_nonliteral/
-
+-- | Returns the Port used to connect to the AMASH MongoDB database.
+getPort :: IO PortID -- ^ The Port read from the env var "AMASH_MONGO_PORT" or "27017" if the var is empty.
 getPort = do
     maybeString <- lookupEnv "AMASH_MONGO_PORT"
-    return $ maybe (PortNumber 27017) (id) fromString maybeString
--}
+    let maybeInt = maybe (Just 27017) readMaybe maybeString
+    return $ PortNumber (fromIntegral (maybe 27017 (id) maybeInt))
 
-getUser :: IO Text
+-- | Returns the User used to authenticate at the AMASH MongoDB database.
+getUser :: IO Text -- ^ The User read from the env var "AMASH_MONGO_USER" or "admin" if the var is empty.
 getUser = getEnvOrDefault "AMASH_MONGO_USER" "admin" >>= return . pack
 
-getPassword :: IO Text
+-- | Returns the Password used to authenticate at the AMASH MongoDB database.
+getPassword :: IO Text -- ^ The IP read from the env var "AMASH_MONGO_PW" or "123" if the var is empty.
 getPassword = getEnvOrDefault "AMASH_MONGO_PW" "123" >>= return . pack
 
