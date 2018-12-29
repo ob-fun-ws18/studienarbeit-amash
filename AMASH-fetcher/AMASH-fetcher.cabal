@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9ec343eb3ed632f2997b002f09f310287f13ffb5d0aa59c2c4ff1e13bca585ae
+-- hash: 24d4d7198944c8e09eca27e9217c3bc6a3cde57db69f870cbe505d12b77dafdd
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -33,6 +33,7 @@ library
       AMASH.Data.App.ImageAssetSummary
       AMASH.Data.App.StorableImageAssetSummary
       AMASH.Data.App.VendorLinks
+      AMASH.Data.AppsList
       AMASH.Data.StorableApp
       AMASH.Data.Vendor
       AMASH.Data.Vendor.Address
