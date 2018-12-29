@@ -13,6 +13,8 @@ module AMASH.URIs (
         appRecommendations,
         appReviews,
 
+        newApps,
+
         vendor
     ) where
 
@@ -72,9 +74,18 @@ appReviews addonKey = app addonKey ++ "/reviews"
 
 -----------------------------------------------------------------------
 
+apps :: String
+apps = baseURI ++ "/addons"
+
+-- TODO categories for apps rankings + Product types
+-- TODO: app rankings / getApps -> atlassian, codegeist, featured, highest-rated, name, new, popular, recent, top-grossing, top-vendor, trending, verified
+newApps :: Int -> String
+newApps page = apps ++ "?filter=new&application=jira&limit=10&offset=" ++ (show $ page * 10)
+
+-----------------------------------------------------------------------
+
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-vendors-vendorId-get
 vendor :: String -> String
 vendor vendorId = baseURI ++ "/vendors/" ++ vendorId
 
--- TODO: app rankings / getApps -> atlassian, codegeist, featured, highest-rated, name, new, popular, recent, top-grossing, top-vendor, trending, verified
 
