@@ -19,7 +19,7 @@ module AMASH.REST.URIs (
         vendor
     ) where
 
-import AMASH.REST.QueryParameters
+import AMASH.Constants
 
 -----------------------------------------------------------------------
 
@@ -80,11 +80,12 @@ appReviews addonKey = app addonKey ++ "/reviews"
 apps :: String
 apps = baseURI ++ "/addons"
 
-buildRankingURI :: Application -> AppsListFilter -> String
-buildRankingURI application appsListFilter = apps
-                                        ++ "?application=" ++ (toKebabCase $ show application)
-                                        ++ "&filter=" ++ (toKebabCase $ show appsListFilter)
-                                        ++ "&limit=10"
+buildRankingURI :: Application -> AppsListFilter -> Integer -> String
+buildRankingURI application appsListFilter page = apps
+                                        ++ "?application=" ++ (showInKebab application)
+                                        ++ "&filter=" ++ (showInKebab appsListFilter)
+                                        ++ "&limit=" ++ (show resultsPerPage)
+                                        ++ "&offset=" ++ (show $ page * resultsPerPage)
 
 -- TODO categories for apps rankings + Product types
 -- TODO: app rankings / getApps -> atlassian, codegeist, featured, highest-rated, name, new, popular, recent, top-grossing, top-vendor, trending, verified

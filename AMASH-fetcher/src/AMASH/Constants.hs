@@ -1,11 +1,17 @@
-module AMASH.REST.QueryParameters where
+module AMASH.Constants where
 
 import Data.Char
 import Data.List (intersperse)
 
--- TODO: Das hier kann man prima testen !!!
+resultsPerPage :: Integer
+resultsPerPage = 25
 
--- Need a CamelCase to KebabCase converter since we want the Strings of the data
+
+showInKebab :: Show a => a -> String
+showInKebab = toKebabCase . show
+
+-- TODO: toKebabCase kann man prima testen !!!
+-- Need a CamelCase to KebabCase converter for the AppsListFilters
 toKebabCase []     = []
 toKebabCase [x]    = [toLower x]
 toKebabCase (x:xs) = toLower x : toKebabCase' xs
@@ -18,9 +24,11 @@ toKebabCase' (x:xs) = if isUpper x
 
 data Application = Confluence
                  | Jira
-                 | JiraServiceDesk
                  | Bitbucket
                  deriving (Eq, Show)
+
+showApplication :: Application -> String
+showApplication application = map toLower (show application)
 
 data AppsListFilter = Atlassian
                     | Codegeist
@@ -35,6 +43,11 @@ data AppsListFilter = Atlassian
                     | Trending
                     | Verified
                     deriving (Eq, Show)
+
+filtersRelevantForRankings :: [AppsListFilter]
+filtersRelevantForRankings = [Featured, HighestRated, Popular, TopGrossing, TopVendor, Trending]
+
+rankings = [(app, filter) | app <- [Confluence, Jira, Bitbucket], filter <- filtersRelevantForRankings]
 
 data Hosting = Server
              | Cloud

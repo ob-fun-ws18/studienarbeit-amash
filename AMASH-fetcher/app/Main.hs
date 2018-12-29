@@ -4,8 +4,10 @@ module Main where
 
 import Lib
 import AMASH.Config
-import MongoDB
+import AMASH.MongoDB
 import AMASH.MongoDB.Setup
+import AMASH.REST.Rankings
+import AMASH.Constants
 import Control.Monad (when)
 import System.Environment
 
@@ -18,9 +20,10 @@ main = do
    if authenticated
    then if "--dbsetup" `elem` args
         then runSetup pipe
-        else fetchAllPlugins pipe
+        else fetchStuff pipe
    else putStrLn "Authentication failed! Are the credentials set in your ENV correct?"
 
+-- Read existing keys from DB and get info for them
 fetchAllPlugins pipe = do
     plugins <- getAllPlugins pipe
     mapM_ fetchPluginMetaData plugins
@@ -28,5 +31,11 @@ fetchAllPlugins pipe = do
     vendors <- getAllVendors pipe
     mapM_ fetchVendorMetaData vendors
 
-fetchScandio = fetchVendorMetaData "1210714"
-fetchPocketQuery = fetchPluginMetaData "de.scandio.confluence.plugins.pocketquery"
+fetchStuff pipe = do
+    mapM_ (fetchAndPersist pipe) rankings
+    putStrLn "Fetched everything! :)"
+
+fetchAndPersist pipe (application, appsListFilter) = do
+    result <- getTop100 application appsListFilter
+    putStrLn $ "Successfully fetched " ++ (show $ Prelude.length result) ++ " results."
+    saveNewRankings pipe application appsListFilter result
