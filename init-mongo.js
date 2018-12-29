@@ -14,5 +14,13 @@ db.vendors.insert([
 	]
 );
 
+/* Either uncomment this or run --dbsetup on first start
+db.rankings.insert(
+	{"application": "confluence"},
+	{"application": "jira"},
+	{"application": "bitbucket"}
+);
+*/
+
 use admin;
 db.createUser({user: "admin", pwd: "123", roles: ["root"]});

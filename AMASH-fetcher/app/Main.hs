@@ -4,16 +4,22 @@ module Main where
 
 import Lib
 import AMASH.Config
-import MongoTest
+import MongoDB
+import AMASH.MongoDB.Setup
+import Control.Monad (when)
+import System.Environment
 
 main :: IO ()
 main = do
+   args <- getArgs
    pipe <- connect -- TODO: Catch Exception (connect can fail)
    authenticated <- authenticate pipe
 
    if authenticated
-   then fetchAllPlugins pipe
-   else putStrLn "Authentication failed!"
+   then if "--dbsetup" `elem` args
+        then runSetup pipe
+        else fetchAllPlugins pipe
+   else putStrLn "Authentication failed! Are the credentials set in your ENV correct?"
 
 fetchAllPlugins pipe = do
     plugins <- getAllPlugins pipe
