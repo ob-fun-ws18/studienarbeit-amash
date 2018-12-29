@@ -6,7 +6,7 @@ import Lib
 import AMASH.Config
 import MongoTest
 
-import qualified AMASH.URIs as URIs -- TODO: Remove ab hier für fetchPage
+import qualified AMASH.REST.URIs as URIs -- TODO: Remove ab hier für fetchPage
 import Network.HTTP.Conduit (simpleHttp)
 import Data.Text
 import Data.Aeson

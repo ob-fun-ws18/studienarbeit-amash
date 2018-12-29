@@ -1,6 +1,6 @@
 -- | Contains / Generates URIs for the Atlassian Marketplace REST API.
 -- | All of these URIs are for GET calls.
-module AMASH.URIs (
+module AMASH.REST.URIs (
         baseURI,
 
         app,

@@ -11,7 +11,7 @@ import Network.HTTP.Conduit (simpleHttp)
 import qualified AMASH.Data.App as App
 import qualified AMASH.Data.Vendor as Vendor
 import qualified AMASH.Data.StorableApp as StorableApp
-import qualified AMASH.URIs as URIs
+import qualified AMASH.REST.URIs as URIs
 
 -- TODO: Remove this (just here for benchmark and test example)
 -- | Calculate the square of a number.
