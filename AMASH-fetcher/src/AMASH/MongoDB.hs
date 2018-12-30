@@ -72,8 +72,8 @@ saveNewRankings pipe application rankingCategory rankings = do
         maybeUnchangedSince = snd checkResult :: Maybe UTCTime
 
     if   rankingsAreEqual && isJust maybeUnchangedSince
-    then saveUnchangedSince pipe application rankingCategory (fromJust maybeUnchangedSince :: UTCTime)
-    else saveNewRankings'   pipe application rankingCategory rankings
+    then saveUnchangedSinceRanking pipe application rankingCategory (fromJust maybeUnchangedSince :: UTCTime)
+    else saveNewRankings'          pipe application rankingCategory rankings
 
 -- | Save a new ranking for an application/category (without checking if they are new).
 saveNewRankings' pipe application rankingCategory rankings = do
@@ -87,7 +87,7 @@ saveNewRankings' pipe application rankingCategory rankings = do
         rankingName     = showRanking application rankingCategory
     putStrLn $ "Persisted " ++ amountOfResults ++ " new results for " ++ rankingName ++ " in the DB."
 
-saveUnchangedSince pipe application rankingCategory unchangedSince = do
+saveUnchangedSinceRanking pipe application rankingCategory unchangedSince = do
     currentDateTime <- getCurrentTime
 
     let selectDocument  = selectApplication application
