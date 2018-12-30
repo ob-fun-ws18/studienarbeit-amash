@@ -11,6 +11,20 @@ import Database.MongoDB
 import Database.MongoDB.Query (Select)
 import Control.Monad.IO.Class (MonadIO)
 
+-- | Unpack a BSON Value that holds a String into a String.
+-- TODO: remove, das hier kommmt nur daher, dass ich vorher valueAt nicht verstanden habe (typ angeben!)
+unValue :: Value -> Text.Text
+unValue (String text) = text
+
+getAllKeys pipe collection = do
+    bsonValues <- access pipe master "amash" $ find (select [] collection) >>= rest
+    return $ map (unValue . valueAt "key") bsonValues
+
+getAllAppKeys    pipe = getAllKeys pipe "plugins"
+getAllVendorKeys pipe = getAllKeys pipe "vendors"
+
+
+
 -- | Builds an action that fetches the last saved rankings entry in for an application and category.
 --   The fetched ranking can either directly contain "rankings" or have a reference to an "unchangedSince" object.
 getLastSavedRankings :: (MonadIO m)

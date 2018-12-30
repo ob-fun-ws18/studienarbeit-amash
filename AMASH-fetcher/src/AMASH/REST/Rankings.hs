@@ -28,7 +28,7 @@ getRanking' uriBuilder maxResults currentPage = do
     case e of
         Left err -> return [] -- TODO: error handling
         Right appsResponse -> do
-            let apps = appsResponseToTextList appsResponse
+            let apps = appsResponseToAppKeys appsResponse
                 lastAmount = fromIntegral $ currentPage * resultsPerPage
                 fetchedAmount = fromIntegral $ Prelude.length apps
                 totalAmount = lastAmount + fetchedAmount

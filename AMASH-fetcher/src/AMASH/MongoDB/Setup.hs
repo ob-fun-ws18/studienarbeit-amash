@@ -1,11 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module AMASH.MongoDB.Setup (runSetup') where
+module AMASH.MongoDB.Setup (runQuickSetup, runFullSetup) where
+
+import AMASH.Constants
+import AMASH.REST.Apps
+import AMASH.MongoDB.Querys
 
 import Database.MongoDB
 import Control.Monad.IO.Class
-import AMASH.Constants
 import Data.Char
+import Data.List
 
 -- | Returns the count of documents in the rankings database for a given application.
 countApplication :: (MonadIO m, Val v)
@@ -35,13 +39,39 @@ createApplicationIfNotExist pipe application = do
     where appString = map (toLower) (show application)
 
 -- | Runs the database setup. The database setup currently just creates necessary empty documents in the rankings database.
-runSetup' :: Pipe  -- ^ The pipe used to connect to the database.
-          -> IO ()
-runSetup' pipe = do
-    putStrLn "Starting AMASH Database setup / quick integrity check..."
+runQuickSetup :: Pipe  -- ^ The pipe used to connect to the database.
+               -> IO ()
+runQuickSetup pipe = do
+    putStrLn "Starting AMASH Database quick setup..."
+    schemaSetup pipe
+    putStrLn "AMASH Database quick setup finished."
 
+-- | Creates necessary empty documents in the rankings database.
+schemaSetup :: Pipe  -- ^ The pipe used to connect to the database.
+             -> IO ()
+schemaSetup pipe = do
     createApplicationIfNotExist pipe Confluence
     createApplicationIfNotExist pipe Jira
     createApplicationIfNotExist pipe Bitbucket
 
-    putStrLn "AMASH Database setup / quick integrity check finished."
+-- | Runs the database setup. The database setup currently just creates necessary empty documents in the rankings database.
+runFullSetup :: Pipe  -- ^ The pipe used to connect to the database.
+              -> IO ()
+runFullSetup pipe = do
+    putStrLn "[Step 1/2] Create schema"
+    schemaSetup pipe
+    putStrLn "[Step 2/2] Fill the DB with untracked app and vendor keys"
+
+    savedAppKeys    <- getAllAppKeys    pipe
+    putStrLn $ (show $ Prelude.length savedAppKeys) ++ " app keys already in the DB.."
+
+    savedVendorKeys <- getAllVendorKeys pipe
+    putStrLn $ (show $ Prelude.length savedVendorKeys) ++ " vendor keys already in the DB.."
+
+    allExistingKeys <- fetchAllExistingKeys
+
+    let newAppKeys    = (fst allExistingKeys) \\ savedAppKeys
+        newVendorKeys = nub $ (snd allExistingKeys) \\ savedVendorKeys
+
+    putStrLn $ (show $ Prelude.length newAppKeys) ++ " new app keys found."
+    putStrLn $ (show $ Prelude.length newVendorKeys) ++ " new vendor keys found."

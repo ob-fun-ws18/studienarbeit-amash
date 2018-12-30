@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ExtendedDefaultRules #-}
 
-module AMASH.MongoDB.Rankings (saveNewRankings') where
+module AMASH.MongoDB.Rankings (saveNewRankings) where
 
 import qualified Data.Text as Text
 import Database.MongoDB
@@ -73,7 +73,7 @@ compareRankings Nothing _  = False
 
 
 -- | Save a new ranking for an application/category if they are new. If they are not new save a "unchangedSince" instead.
-saveNewRankings' pipe application rankingCategory rankings = do
+saveNewRankings pipe application rankingCategory rankings = do
     checkResult <- checkIfRankingsAreNew pipe application rankingCategory rankings
     let rankingsAreEqual    = fst checkResult
         maybeUnchangedSince = snd checkResult :: Maybe UTCTime

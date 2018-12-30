@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-} -- TODO: remove
+{-# LANGUAGE OverloadedStrings #-}
 
 module AMASH.Data.AppsList where
 
@@ -13,7 +14,12 @@ data AppsListResponse = AppsListResponse { count :: Int
 
 newtype AppsList = AppsList { addons :: [App] } deriving (Show, Eq, Generic)
 
-newtype App = App { key :: Text } deriving (Show, Eq, Generic)
+data App = App { key :: Text
+               , _links :: AppLinks
+               } deriving (Show, Eq, Generic)
+
+newtype AppLinks = AppLinks { vendor :: AppVendor } deriving (Show, Eq, Generic)
+newtype AppVendor = AppVendor { href :: Text } deriving (Show, Eq, Generic)
 
 instance FromJSON AppsListResponse
 instance ToJSON AppsListResponse
@@ -24,6 +30,14 @@ instance ToJSON AppsList
 instance FromJSON App
 instance ToJSON App
 
-appsResponseToTextList :: AppsListResponse -> [Text]
-appsResponseToTextList appsResponse = Prelude.map key (addons $ _embedded appsResponse)
+instance FromJSON AppLinks
+instance ToJSON AppLinks
 
+instance FromJSON AppVendor
+instance ToJSON AppVendor
+
+appsResponseToAppKeys :: AppsListResponse -> [Text]
+appsResponseToAppKeys appsResponse = Prelude.map key (addons $ _embedded appsResponse)
+
+appsResponseToVendorKeys :: AppsListResponse -> [Text]
+appsResponseToVendorKeys appsResponse = Prelude.map (replace "/rest/2/vendors/" "" . href . vendor . _links) (addons $ _embedded appsResponse)

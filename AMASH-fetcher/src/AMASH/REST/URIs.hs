@@ -13,6 +13,8 @@ module AMASH.REST.URIs (
         appRecommendations,
         appReviews,
 
+        apps,
+        appsPaged,
         buildRankingURI,
 
         vendor
@@ -79,12 +81,15 @@ appReviews addonKey = app addonKey ++ "/reviews"
 apps :: String
 apps = baseURI ++ "/addons"
 
+appsPaged :: Integer -> String
+appsPaged page = baseURI ++ "/addons?" ++ pageParams page
+
 buildRankingURI :: Application -> AppsListFilter -> Integer -> String
 buildRankingURI application appsListFilter page = apps
                                         ++ "?application=" ++ (showApplication application)
                                         ++ "&filter=" ++ (showInKebab appsListFilter)
-                                        ++ "&limit=" ++ (show resultsPerPage)
-                                        ++ "&offset=" ++ (show $ page * resultsPerPage)
+                                        ++ "&" ++ pageParams page
+
 
 -----------------------------------------------------------------------
 
@@ -92,4 +97,5 @@ buildRankingURI application appsListFilter page = apps
 vendor :: String -> String
 vendor vendorId = baseURI ++ "/vendors/" ++ vendorId
 
-
+pageParams :: Integer -> String
+pageParams page = "limit=" ++ (show resultsPerPage) ++ "&offset=" ++ (show $ page * resultsPerPage)
