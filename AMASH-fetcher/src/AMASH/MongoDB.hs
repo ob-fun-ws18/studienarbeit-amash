@@ -13,9 +13,9 @@ import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Setup
 
 -- Exporting functions from nested modules for single import functionality
-openConnection = AMASH.MongoDB.Connection.openConnection_
-authenticate   = AMASH.MongoDB.Connection.authenticate_
-runSetup       = AMASH.MongoDB.Setup.runSetup_
+openConnection = AMASH.MongoDB.Connection.openConnection'
+authenticate   = AMASH.MongoDB.Connection.authenticate'
+runSetup       = AMASH.MongoDB.Setup.runSetup'
 
 -- | Unpack a BSON Value that holds a String into a String.
 unValue :: Value -> String
