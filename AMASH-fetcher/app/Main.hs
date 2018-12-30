@@ -3,18 +3,15 @@
 module Main where
 
 import Lib
-import AMASH.Config
 import AMASH.MongoDB
-import AMASH.MongoDB.Setup
 import AMASH.REST.Rankings
 import AMASH.Constants
-import Control.Monad (when)
 import System.Environment
 
 main :: IO ()
 main = do
    args <- getArgs
-   pipe <- connect -- TODO: Catch Exception (connect can fail)
+   pipe <- openConnection -- TODO: Catch Exception (connect can fail)
    authenticated <- authenticate pipe
 
    if authenticated

@@ -24,6 +24,7 @@ getLatestRanking application rankingCategory = aggregate "rankings" [
         ["$unwind"  =: arrayName],
         ["$limit"   =: 1],
         ["$project" =: [
+            "_id"      =: 0,
             "date"     =: arrayName ++ ".date",
             "rankings" =: arrayName ++ ".rankings"
         ]]

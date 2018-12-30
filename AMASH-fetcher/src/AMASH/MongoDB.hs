@@ -8,26 +8,17 @@ import qualified Data.Text as Text
 import Database.MongoDB
 import Data.Time.Clock
 
-import qualified AMASH.Config as Config
-import AMASH.MongoDB.Querys
 import AMASH.Constants
+import AMASH.MongoDB.Connection
+import AMASH.MongoDB.Querys
+import AMASH.MongoDB.Setup
 
--- | Connect to the database specified in the environment variables. Can fail due to connection errors.
-connect :: IO Pipe -- ^ The pipe used to communicate with the database.
-connect = do
-    ip <- Config.getIP
-    port <- Config.getPort
-    Database.MongoDB.connect $ Host ip port
+-- Exporting functions from imported modules
+openConnection = AMASH.MongoDB.Connection.openConnection
+authenticate   = AMASH.MongoDB.Connection.authenticate
+runSetup       = AMASH.MongoDB.Setup.runSetup
 
--- | Authenticate at the database using the credentials specified in the environment variables.
-authenticate :: Pipe    -- ^ The pipe used to communicate with the database.
-             -> IO Bool -- ^ Whether the authentication was successful.
-authenticate pipe = do
-    user <- Config.getUser
-    pw <- Config.getPassword
-    access pipe master "admin" $ auth user pw
-
--- | Unpack a BSON Value that holds a String into a String
+-- | Unpack a BSON Value that holds a String into a String.
 unValue :: Value -> String
 unValue (String text) = Text.unpack text
 
@@ -38,7 +29,7 @@ getAllKeys pipe collection = do
 getAllPlugins pipe = getAllKeys pipe "plugins"
 getAllVendors pipe = getAllKeys pipe "vendors"
 
-
+-- | Saves a new ranking for an application/category.
 saveNewRankings pipe application rankingCategory rankings = do
     currentDateTime <- getCurrentTime
 
