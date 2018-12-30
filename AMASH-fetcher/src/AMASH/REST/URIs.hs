@@ -13,7 +13,6 @@ module AMASH.REST.URIs (
         appRecommendations,
         appReviews,
 
-        newApps,
         buildRankingURI,
 
         vendor
@@ -86,11 +85,6 @@ buildRankingURI application appsListFilter page = apps
                                         ++ "&filter=" ++ (showInKebab appsListFilter)
                                         ++ "&limit=" ++ (show resultsPerPage)
                                         ++ "&offset=" ++ (show $ page * resultsPerPage)
-
--- TODO categories for apps rankings + Product types
--- TODO: app rankings / getApps -> atlassian, codegeist, featured, highest-rated, name, new, popular, recent, top-grossing, top-vendor, trending, verified
-newApps :: Int -> String
-newApps page = apps ++ "?filter=new&application=jira&limit=10&offset=" ++ (show $ page * 10)
 
 -----------------------------------------------------------------------
 
