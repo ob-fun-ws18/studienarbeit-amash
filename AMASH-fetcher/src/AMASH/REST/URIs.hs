@@ -82,7 +82,7 @@ apps = baseURI ++ "/addons"
 
 buildRankingURI :: Application -> AppsListFilter -> Integer -> String
 buildRankingURI application appsListFilter page = apps
-                                        ++ "?application=" ++ (showInKebab application)
+                                        ++ "?application=" ++ (showApplication application)
                                         ++ "&filter=" ++ (showInKebab appsListFilter)
                                         ++ "&limit=" ++ (show resultsPerPage)
                                         ++ "&offset=" ++ (show $ page * resultsPerPage)
