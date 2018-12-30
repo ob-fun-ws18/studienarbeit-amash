@@ -47,7 +47,7 @@ data AppsListFilter = Atlassian
 filtersRelevantForRankings :: [AppsListFilter]
 filtersRelevantForRankings = [Featured, HighestRated, Popular, TopGrossing, TopVendor, Trending]
 
-rankings = [(app, filter) | app <- [Confluence, Jira, Bitbucket], filter <- filtersRelevantForRankings]
+rankingAppsAndFilters = [(app, filter) | app <- [Confluence, Jira, Bitbucket], filter <- filtersRelevantForRankings]
 
 data Hosting = Server
              | Cloud

@@ -11,25 +11,29 @@ import Database.MongoDB
 import Database.MongoDB.Query (Select)
 import Control.Monad.IO.Class (MonadIO)
 
--- | Builds an action that fetches the latest rankings entry in for an application/category.
+-- | Builds an action that fetches the last saved rankings entry in for an application and category.
 --   The fetched ranking can either directly contain "rankings" or have a reference to an "unchangedSince" object.
-getLatestRanking :: (MonadIO m)
+getLastSavedRankings :: (MonadIO m)
     => Application          -- ^ The application.
     -> AppsListFilter       -- ^ The filter / category.
     -> Action m [Document]  -- ^ The resulting action.
-getLatestRanking application rankingCategory = aggregate "rankings" [
+getLastSavedRankings application rankingCategory = aggregate "rankings" [
         ["$match"   =: [
             "application" =: appName
         ]],
-        ["$unwind"  =: arrayName],
+        ["$unwind"  =: arrayName'],
+        ["$match" =: [
+            Text.pack (arrayName ++ ".unchangedSince") =: ["$exists" =: False]
+        ]],
         ["$limit"   =: 1],
         ["$project" =: [
             "_id"      =: 0,
-            "date"     =: arrayName ++ ".date",
-            "rankings" =: arrayName ++ ".rankings"
+            "date"     =: arrayName' ++ ".date",
+            "rankings" =: arrayName' ++ ".rankings"
         ]]
-    ] where arrayName = "$" ++ showInKebab rankingCategory
-            appName   = showApplication application
+    ] where arrayName  = showInKebab rankingCategory
+            arrayName' = "$" ++ arrayName
+            appName    = showApplication application
 
 -- | Builds a selection for an application from the rankings database.
 selectApplication :: Select aQueryOrSelection
@@ -50,4 +54,16 @@ pushRankings rankingCategory rankings dateTime = [
                 "rankings" =: rankings
             ]]
         ]
+    ]] where arrayName = Text.pack $ showInKebab rankingCategory
+
+
+pushUnchangedSinceRankings rankingCategory dateTime unchangedSince = [
+    "$push" =: [
+       arrayName =: [
+           "$position" =: 0,
+           "$each" =: [[
+               "date" =: dateTime,
+               "unchangedSince" =: unchangedSince
+           ]]
+       ]
     ]] where arrayName = Text.pack $ showInKebab rankingCategory

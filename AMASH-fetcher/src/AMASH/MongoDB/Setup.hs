@@ -38,10 +38,10 @@ createApplicationIfNotExist pipe application = do
 runSetup' :: Pipe  -- ^ The pipe used to connect to the database.
           -> IO ()
 runSetup' pipe = do
-    putStrLn "Starting AMASH Database setup..."
+    putStrLn "Starting AMASH Database setup / quick integrity check..."
 
     createApplicationIfNotExist pipe Confluence
     createApplicationIfNotExist pipe Jira
     createApplicationIfNotExist pipe Bitbucket
 
-    putStrLn "AMASH Database setup finished."
+    putStrLn "AMASH Database setup / quick integrity check finished."

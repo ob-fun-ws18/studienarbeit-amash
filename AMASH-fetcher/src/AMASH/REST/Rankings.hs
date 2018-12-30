@@ -13,7 +13,7 @@ import Control.Monad (liftM2, when)
 -- TODO: Später sollte vielleicht Application, AppsListFilter und Hosting alles Maybe werden.
 getTop100 :: Application -> AppsListFilter -> IO [Text]
 getTop100 application appsListFilter = do
-    putStrLn $ "Fetching rankings for '" ++ (showRanking application appsListFilter) ++ "'."
+    putStrLn $ "Fetching rankings for " ++ (showRanking application appsListFilter) ++ "."
     let uriBuilder = buildRankingURI application appsListFilter
     getRanking uriBuilder 100
 
