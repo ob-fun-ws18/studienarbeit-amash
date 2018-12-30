@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ExtendedDefaultRules #-}
 
--- (AMASH.MongoDB.connect, authenticate, getAllPlugins, getAllVendors, saveNewRankings)
 module AMASH.MongoDB where
 
 import qualified Data.Text as Text
@@ -13,10 +12,10 @@ import AMASH.MongoDB.Connection
 import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Setup
 
--- Exporting functions from imported modules
-openConnection = AMASH.MongoDB.Connection.openConnection
-authenticate   = AMASH.MongoDB.Connection.authenticate
-runSetup       = AMASH.MongoDB.Setup.runSetup
+-- Exporting functions from nested modules for single import functionality
+openConnection = AMASH.MongoDB.Connection.openConnection_
+authenticate   = AMASH.MongoDB.Connection.authenticate_
+runSetup       = AMASH.MongoDB.Setup.runSetup_
 
 -- | Unpack a BSON Value that holds a String into a String.
 unValue :: Value -> String

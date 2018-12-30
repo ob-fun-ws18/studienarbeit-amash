@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module AMASH.MongoDB.Setup (runSetup) where
+module AMASH.MongoDB.Setup (runSetup_) where
 
 import Database.MongoDB
 import Control.Monad.IO.Class
@@ -35,9 +35,9 @@ createApplicationIfNotExist pipe application = do
     where appString = map (toLower) (show application)
 
 -- | Runs the database setup. The database setup currently just creates necessary empty documents in the rankings database.
-runSetup :: Pipe  -- ^ The pipe used to connect to the database.
-         -> IO ()
-runSetup pipe = do
+runSetup_ :: Pipe  -- ^ The pipe used to connect to the database.
+          -> IO ()
+runSetup_ pipe = do
     putStrLn "Starting AMASH Database setup..."
 
     createApplicationIfNotExist pipe Confluence
