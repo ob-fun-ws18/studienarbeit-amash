@@ -9,14 +9,14 @@ import AMASH.Constants
 
 main :: IO ()
 main = do
-   pipe <- openConnection -- TODO: Catch Exception (connect can fail)
-   authenticated <- authenticate pipe
+    pipe <- openConnection -- TODO: Catch Exception (connect can fail)
+    authenticated <- authenticate pipe
 
-   if authenticated
-   then do
+    if authenticated
+    then do
         runSetup pipe
         fetchStuff pipe
-   else putStrLn "Authentication failed! Are the credentials set in your ENV correct?"
+    else putStrLn "Authentication failed! Are the credentials set in your ENV correct?"
 
 -- Read existing keys from DB and get info for them
 fetchAllPlugins pipe = do
