@@ -7,6 +7,7 @@ import qualified Data.Text as Text
 import Database.MongoDB
 import Data.Time.Clock
 
+import AMASH.Util
 import AMASH.Constants
 import AMASH.MongoDB.Connection
 import AMASH.MongoDB.Querys
@@ -28,6 +29,9 @@ getAllKeys pipe collection = do
 getAllPlugins pipe = getAllKeys pipe "plugins"
 getAllVendors pipe = getAllKeys pipe "vendors"
 
+checkIfRankingsExist pipe application rankingCategory rankings = do
+    return (True, 1)
+
 -- | Saves a new ranking for an application/category.
 saveNewRankings pipe application rankingCategory rankings = do
     currentDateTime <- getCurrentTime
@@ -37,6 +41,5 @@ saveNewRankings pipe application rankingCategory rankings = do
     access pipe master "amash" $ modify selectDocument pushNewRankings
 
     let amountOfResults = show $ Prelude.length rankings
-        applicationName = showApplication application
-        rankingName     = showInKebab rankingCategory
-    putStrLn $ "Persisted " ++ amountOfResults ++ " new results for '" ++ applicationName ++ "/" ++ rankingName ++ "' in the DB."
+        rankingName     = showRanking application rankingCategory
+    putStrLn $ "Persisted " ++ amountOfResults ++ " new results for " ++ rankingName ++ " in the DB."

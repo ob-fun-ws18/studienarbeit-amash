@@ -1,5 +1,6 @@
 module AMASH.REST.Rankings (getTop100) where
 
+import AMASH.Util
 import AMASH.Constants
 import AMASH.REST.URIs (buildRankingURI)
 import AMASH.Data.AppsList
@@ -12,7 +13,7 @@ import Control.Monad (liftM2, when)
 -- TODO: Später sollte vielleicht Application, AppsListFilter und Hosting alles Maybe werden.
 getTop100 :: Application -> AppsListFilter -> IO [Text]
 getTop100 application appsListFilter = do
-    putStrLn $ "Fetching rankings for '" ++ (showApplication application) ++ "/" ++ (showInKebab appsListFilter) ++ "'."
+    putStrLn $ "Fetching rankings for '" ++ (showRanking application appsListFilter) ++ "'."
     let uriBuilder = buildRankingURI application appsListFilter
     getRanking uriBuilder 100
 
