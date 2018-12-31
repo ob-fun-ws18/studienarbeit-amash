@@ -6,6 +6,7 @@ import Data.List (intersperse)
 resultsPerPage :: Integer
 resultsPerPage = 25
 
+validProgramArgs = ["-s", "--setup", "-a", "--apps", "-v", "--vendors", "-r", "--rankings"]
 
 showInKebab :: Show a => a -> String
 showInKebab = toKebabCase . show
