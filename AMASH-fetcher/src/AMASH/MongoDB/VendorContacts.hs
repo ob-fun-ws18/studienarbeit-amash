@@ -29,7 +29,6 @@ persistVendorContacts pipe vendorId fetchedContacts = do
 
 putNewContactsIntoDatabase pipe vendorId docs = do
     currentDateTime <- getCurrentTime
-
     let selectDocument  = selectVendor vendorId
         pushNewContacts = pushVendorContacts currentDateTime docs
     access pipe master "amash" $ modify selectDocument pushNewContacts
@@ -40,4 +39,4 @@ putUnchangedSinceIntoDatabase pipe vendorId maybeUnchangedSince = do
     let selectDocument  = selectVendor vendorId
         pushNewData     = pushUnchangedSinceVendorContacts currentDateTime (fromJust maybeUnchangedSince)
     access pipe master "amash" $ modify selectDocument pushNewData
-    putStrLn "Persisted 'unchanged since' pointer in the DB."
+    putStrLn "Persisted 'unchanged since' pointer in the database."

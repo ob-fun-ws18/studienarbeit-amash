@@ -18,76 +18,29 @@ import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Setup
 import AMASH.MongoDB.Helpers
 
--- | Save a new ranking for an application/category if they are new. If they are not new save a "unchangedSince" instead.
-saveNewRankings pipe application rankingCategory rankings = do
-    checkResult <- checkIfRankingsAreNew pipe application rankingCategory rankings
+saveNewRankings pipe application rankingCategory fetchedRankings = do
+    let getLastSavedAction = access pipe master "amash" $ getLastSavedRankings application rankingCategory
+        compareWithOldData = compareFetchedAndOldData fetchedRankings "rankings"
+
+    checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction fetchedRankings compareWithOldData
+
     let rankingsAreEqual    = fst checkResult
         maybeUnchangedSince = snd checkResult :: Maybe UTCTime
 
     if   rankingsAreEqual && isJust maybeUnchangedSince
-    then saveUnchangedSinceRanking pipe application rankingCategory (fromJust maybeUnchangedSince :: UTCTime)
-    else saveNewRankingsHard       pipe application rankingCategory rankings
+    then puteUnchangedSinceIntoDatabase pipe application rankingCategory (fromJust maybeUnchangedSince :: UTCTime)
+    else puteNewRankingsIntoDatabase pipe application rankingCategory fetchedRankings
 
--- | Gets the last saved ranking in the database for a given application and ranking category. (Finds first entry with actual rankings).
--- TODO: Implement reading date from "unchangedSince" and searching for it instead of solving it via aggregation -> performance.
-getLatestRanking :: MonadIO m
-                 => Pipe           -- ^ The pipe to communicate with the database.
-                 -> Application    -- ^ The application.
-                 -> AppsListFilter -- ^ The AppsListFilter / Ranking category.
-                 -> m [Document]   -- ^ List of results.
-getLatestRanking pipe application rankingCategory = access pipe master "amash" $ getLastSavedRankings application rankingCategory
-
-
--- | Checks if rankings are equal to the last saved rankings (by fetching them) and returns a tuple of (areEqual, dateOfEqual).
-checkIfRankingsAreNew :: Pipe                     -- ^ The pipe to communicate with the database.
-                      -> Application              -- ^ The application.
-                      -> AppsListFilter           -- ^ The AppsListFilter / Ranking category.
-                      -> [Text.Text]              -- ^ The newly fetched rankings.
-                      -> IO (Bool, Maybe UTCTime) -- ^ Whether the rankings are equal + the date of the entry being equal if exists.
-checkIfRankingsAreNew pipe application rankingCategory rankings = do
-    bsonDoc <- getLatestRanking pipe application rankingCategory
-
-    if   Prelude.length bsonDoc == 0
-    then thereAreNoOlderEntries
-    else checkIfRankingsAreNew' (bsonDoc !! 0) rankings
-
-
--- | Compares the rankings within the bsonDoc and the given rankings and returns the result as well as the embedded date.
-checkIfRankingsAreNew' bsonDoc rankings = do
-    let maybeRankings    = bsonDoc !? "rankings" :: Maybe [Text.Text]
-        maybeDate        = bsonDoc !? "date"     :: Maybe UTCTime
-        rankingsAreEqual = maybeRankings `eqMaybe` rankings
-
-    when (isNothing maybeDate) (error "Last saved rankings do not have a date. This means the data is corrupted!")
-    putStrLn $ "The last saved data for this ranking is from '" ++ (show $ fromJust maybeDate) ++ "'."
-
-    if   rankingsAreEqual
-    then putStrLn "UNCHANGED - The last saved rankings are equal with the newly fetched rankings."
-    else putStrLn "NEW DATA! - The newly fetched rankings are different from last saved rankings."
-
-    return (rankingsAreEqual, maybeDate)
-
-
--- | Save a new ranking for an application / ranking category (without checking if they are new).
-saveNewRankingsHard pipe application rankingCategory rankings = do
+puteNewRankingsIntoDatabase pipe application rankingCategory rankings = do
     currentDateTime <- getCurrentTime
-
     let selectDocument  = selectApplication application
         pushNewRankings = pushRankings rankingCategory rankings currentDateTime
     access pipe master "amash" $ modify selectDocument pushNewRankings
+    putStrLn "Saved new rankings in the database."
 
-    let amountOfResults = show $ Prelude.length rankings
-        rankingName     = showRanking application rankingCategory
-    putStrLn $ "Persisted " ++ amountOfResults ++ " new results for " ++ rankingName ++ " in the DB."
-
-
--- | Save a new 'unchanged since' reference to the database for a given application / ranking category.
-saveUnchangedSinceRanking pipe application rankingCategory unchangedSince = do
+puteUnchangedSinceIntoDatabase pipe application rankingCategory unchangedSince = do
     currentDateTime <- getCurrentTime
-
     let selectDocument  = selectApplication application
-        pushNewData = pushUnchangedSinceRankings rankingCategory currentDateTime unchangedSince
+        pushNewData     = pushUnchangedSinceRankings rankingCategory currentDateTime unchangedSince
     access pipe master "amash" $ modify selectDocument pushNewData
-
-    let rankingName     = showRanking application rankingCategory
-    putStrLn $ "Persisted 'unchanged since' pointer to '" ++ (show unchangedSince) ++ "'' for " ++ rankingName ++ " in the DB."
+    putStrLn "Persisted 'unchanged since' pointer in the database."
