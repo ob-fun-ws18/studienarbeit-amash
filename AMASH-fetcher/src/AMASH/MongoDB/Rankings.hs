@@ -16,7 +16,17 @@ import AMASH.Constants
 import AMASH.MongoDB.Connection
 import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Setup
+import AMASH.MongoDB.Helpers
 
+-- | Save a new ranking for an application/category if they are new. If they are not new save a "unchangedSince" instead.
+saveNewRankings pipe application rankingCategory rankings = do
+    checkResult <- checkIfRankingsAreNew pipe application rankingCategory rankings
+    let rankingsAreEqual    = fst checkResult
+        maybeUnchangedSince = snd checkResult :: Maybe UTCTime
+
+    if   rankingsAreEqual && isJust maybeUnchangedSince
+    then saveUnchangedSinceRanking pipe application rankingCategory (fromJust maybeUnchangedSince :: UTCTime)
+    else saveNewRankingsHard       pipe application rankingCategory rankings
 
 -- | Gets the last saved ranking in the database for a given application and ranking category. (Finds first entry with actual rankings).
 -- TODO: Implement reading date from "unchangedSince" and searching for it instead of solving it via aggregation -> performance.
@@ -38,22 +48,15 @@ checkIfRankingsAreNew pipe application rankingCategory rankings = do
     bsonDoc <- getLatestRanking pipe application rankingCategory
 
     if   Prelude.length bsonDoc == 0
-    then firstEntryInThisRankings
+    then thereAreNoOlderEntries
     else checkIfRankingsAreNew' (bsonDoc !! 0) rankings
-
-
--- | Prints out that there are no earlier rankings to compare the new rankings with. Utility function for "checkIfRankingsAreNew".
-firstEntryInThisRankings :: IO (Bool, Maybe a) -- ^ (True, Nothing).
-firstEntryInThisRankings = do
-    putStrLn "NEW DATA! - There are no earlier saved rankings to compare the newly fetched rankings with."
-    return (True, Nothing)
 
 
 -- | Compares the rankings within the bsonDoc and the given rankings and returns the result as well as the embedded date.
 checkIfRankingsAreNew' bsonDoc rankings = do
     let maybeRankings    = bsonDoc !? "rankings" :: Maybe [Text.Text]
         maybeDate        = bsonDoc !? "date"     :: Maybe UTCTime
-        rankingsAreEqual = compareRankings maybeRankings rankings
+        rankingsAreEqual = maybeRankings `eqMaybe` rankings
 
     when (isNothing maybeDate) (error "Last saved rankings do not have a date. This means the data is corrupted!")
     putStrLn $ "The last saved data for this ranking is from '" ++ (show $ fromJust maybeDate) ++ "'."
@@ -63,25 +66,6 @@ checkIfRankingsAreNew' bsonDoc rankings = do
     else putStrLn "NEW DATA! - The newly fetched rankings are different from last saved rankings."
 
     return (rankingsAreEqual, maybeDate)
-
-
--- | Compare two rankings against each other.
-compareRankings :: Maybe [Text.Text] -- ^ The old rankings (coming from DB -> wrapped in Maybe)
-                -> [Text.Text]       -- ^ The new rankings (freshly fetched from the Marketplace API)
-                -> Bool              -- ^ Whether or not the rankings are equal
-compareRankings (Just a) b = a == b
-compareRankings Nothing _  = False
-
-
--- | Save a new ranking for an application/category if they are new. If they are not new save a "unchangedSince" instead.
-saveNewRankings pipe application rankingCategory rankings = do
-    checkResult <- checkIfRankingsAreNew pipe application rankingCategory rankings
-    let rankingsAreEqual    = fst checkResult
-        maybeUnchangedSince = snd checkResult :: Maybe UTCTime
-
-    if   rankingsAreEqual && isJust maybeUnchangedSince
-    then saveUnchangedSinceRanking pipe application rankingCategory (fromJust maybeUnchangedSince :: UTCTime)
-    else saveNewRankingsHard       pipe application rankingCategory rankings
 
 
 -- | Save a new ranking for an application / ranking category (without checking if they are new).

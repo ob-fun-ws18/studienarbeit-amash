@@ -23,7 +23,7 @@ import Control.Monad (when)
 fetchRankings pipe = do
     runQuickSetup pipe
     putStrLn ">>> Fetching rankings."
-    mapM_ (fetchAndPersistRanking pipe) rankingAppsAndFilters
+    mapM_ (fetchAndPersistRanking pipe) (take 1 rankingAppsAndFilters) -- TODO: remove "take 1" !!!
     putStrLn "----------------------------------------"
     putStrLn ">>> All rankings fetched."
 
@@ -39,20 +39,18 @@ fetchVendors pipe = do
     vendorKeys <- getAllVendorKeys pipe
     let amountOfVendors = show $ length vendorKeys
     putStrLn $ ">>> Fetching vendors. Found " ++ amountOfVendors ++ " vendor keys in the database."
-    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip (take 1 vendorKeys) [1..]) -- TODO: remove "take 1"!!!
     putStrLn "----------------------------------------"
+    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip (take 1 vendorKeys) [1..]) -- TODO: remove "take 1" !!!
     putStrLn ">>> All vendors fetched."
 
 fetchAndPersistVendor :: Pipe -> String -> (Text.Text, Integer) -> IO ()
 fetchAndPersistVendor pipe totalVendors (vendorKey, currentVendor) = do
-    putStrLn "----------------------------------------"
     putStrLn $ "Fetching vendor '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
 
     maybeVendorContacts <- fetchVendorContacts vendorKey
     when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
 
     --saveNewRankings pipe application appsListFilter result
-    putStrLn ""
-
+    putStrLn "----------------------------------------"
 
 fetchApps pipe = putStrLn "Not yet implemented."
