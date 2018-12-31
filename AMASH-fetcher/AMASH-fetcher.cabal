@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f1a13cbfcacf0d810fdd2705f1a9556506f4cfdec4911edf6a1a3207fb8eefa0
+-- hash: a7b725e49c129ad43f8dfefa1421a1b41d84301a630a166ac0bb32591da071f6
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -39,6 +39,7 @@ library
       AMASH.Data.StorableApp
       AMASH.Data.Vendor
       AMASH.Data.Vendor.Address
+      AMASH.Data.Vendor.StorableVendorContact
       AMASH.Data.Vendor.VendorCloudSecurity
       AMASH.Data.Vendor.VendorContacts
       AMASH.Data.Vendor.VendorExternalLinks
@@ -69,6 +70,7 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
     , http-conduit
     , mongoDB
@@ -88,6 +90,7 @@ executable AMASH-fetcher-exe
       AMASH-fetcher
     , aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
     , http-conduit
     , mongoDB
@@ -110,6 +113,7 @@ test-suite AMASH-fetcher-test
     , QuickCheck
     , aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
     , hspec
     , http-conduit
@@ -131,6 +135,7 @@ benchmark AMASH-fetcher-benchmark
       AMASH-fetcher
     , aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
     , criterion
     , http-conduit
