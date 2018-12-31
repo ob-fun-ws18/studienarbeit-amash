@@ -4,7 +4,7 @@ module Main where
 
 import Lib
 import AMASH.MongoDB
-import AMASH.REST.Rankings
+import AMASH.REST
 import AMASH.Constants
 import AMASH.Util
 
