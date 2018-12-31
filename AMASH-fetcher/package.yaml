@@ -28,7 +28,6 @@ dependencies:
 - time
 - mongoDB
 - mtl
-#- AesonBson
 
 library:
   source-dirs: src
