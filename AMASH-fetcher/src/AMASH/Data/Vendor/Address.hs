@@ -5,6 +5,7 @@ module AMASH.Data.Vendor.Address where
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import GenericBson
 
 data Address = Address { line1 :: Text
                        , line2 :: Maybe Text
@@ -16,3 +17,6 @@ data Address = Address { line1 :: Text
 
 instance FromJSON Address
 instance ToJSON Address
+
+instance FromBSON Address
+instance ToBSON Address

@@ -5,6 +5,7 @@ module AMASH.Data.Vendor.VendorExternalLinks where
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import GenericBson
 
 data VendorExternalLinks = VendorExternalLinks { homePage :: Maybe Text
                                                , sla :: Maybe Text
@@ -12,3 +13,5 @@ data VendorExternalLinks = VendorExternalLinks { homePage :: Maybe Text
 
 instance FromJSON VendorExternalLinks
 instance ToJSON VendorExternalLinks
+instance FromBSON VendorExternalLinks
+instance ToBSON VendorExternalLinks

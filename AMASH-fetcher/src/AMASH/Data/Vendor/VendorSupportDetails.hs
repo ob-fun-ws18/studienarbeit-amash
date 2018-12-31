@@ -5,6 +5,7 @@ module AMASH.Data.Vendor.VendorSupportDetails where
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import GenericBson
 
 data VendorSupportDetails = VendorSupportDetails { supportOrg :: Maybe SupportOrganization
                                                  , targetResponseTime :: Maybe Int
@@ -14,6 +15,8 @@ data VendorSupportDetails = VendorSupportDetails { supportOrg :: Maybe SupportOr
 
 instance FromJSON VendorSupportDetails
 instance ToJSON VendorSupportDetails
+instance FromBSON VendorSupportDetails
+instance ToBSON VendorSupportDetails
 
 data SupportOrganization = SupportOrganization { name :: Text
                                                , supportEmail :: Maybe Text
@@ -23,6 +26,8 @@ data SupportOrganization = SupportOrganization { name :: Text
 
 instance FromJSON SupportOrganization
 instance ToJSON SupportOrganization
+instance FromBSON SupportOrganization
+instance ToBSON SupportOrganization
 
 
 data SupportHours = SupportHours { range :: Maybe TimeRange
@@ -33,6 +38,8 @@ data SupportHours = SupportHours { range :: Maybe TimeRange
 
 instance FromJSON SupportHours
 instance ToJSON SupportHours
+instance FromBSON SupportHours
+instance ToBSON SupportHours
 
 data TimeRange = TimeRange { from :: Text
                            , until :: Text
@@ -40,6 +47,8 @@ data TimeRange = TimeRange { from :: Text
 
 instance FromJSON TimeRange
 instance ToJSON TimeRange
+instance FromBSON TimeRange
+instance ToBSON TimeRange
 
 data Holiday = Holiday { title :: Text
                        , date :: Text
@@ -48,3 +57,5 @@ data Holiday = Holiday { title :: Text
 
 instance FromJSON Holiday
 instance ToJSON Holiday
+instance FromBSON Holiday
+instance ToBSON Holiday

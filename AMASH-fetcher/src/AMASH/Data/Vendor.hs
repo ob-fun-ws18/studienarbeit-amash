@@ -5,6 +5,7 @@ module AMASH.Data.Vendor where
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import GenericBson
 
 import AMASH.Data.Vendor.Address
 import AMASH.Data.Vendor.VendorExternalLinks
@@ -28,3 +29,5 @@ data Vendor = Vendor { name :: Text
 
 instance FromJSON Vendor
 instance ToJSON Vendor
+instance FromBSON Vendor
+instance ToBSON Vendor

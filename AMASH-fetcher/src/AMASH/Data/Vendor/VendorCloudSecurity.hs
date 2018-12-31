@@ -6,6 +6,7 @@ import Data.Text
 import Data.Aeson
 import GHC.Generics
 import Data.Time.Clock
+import GenericBson
 
 data VendorCloudSecurity = VendorCloudSecurity { approved  :: Bool
                                                , issueKey :: Maybe Text
@@ -15,3 +16,6 @@ data VendorCloudSecurity = VendorCloudSecurity { approved  :: Bool
 
 instance FromJSON VendorCloudSecurity
 instance ToJSON VendorCloudSecurity
+
+instance FromBSON VendorCloudSecurity
+instance ToBSON VendorCloudSecurity

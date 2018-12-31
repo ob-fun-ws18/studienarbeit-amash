@@ -6,6 +6,7 @@ module AMASH.Data.Vendor.VendorContacts where
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import GenericBson
 
 data VendorContacts = VendorContacts { count :: Integer
                                      , contacts :: [VendorContact]
@@ -21,13 +22,20 @@ newtype VendorContactLinksAlternate = VendorContactLinksAlternate { href :: Text
 
 instance FromJSON VendorContacts
 instance ToJSON VendorContacts
+instance FromBSON VendorContacts
+instance ToBSON VendorContacts
 
 instance FromJSON VendorContact
 instance ToJSON VendorContact
+instance FromBSON VendorContact
+instance ToBSON VendorContact
 
 instance FromJSON VendorContactLinks
 instance ToJSON VendorContactLinks
+instance FromBSON VendorContactLinks
+instance ToBSON VendorContactLinks
 
 instance FromJSON VendorContactLinksAlternate
 instance ToJSON VendorContactLinksAlternate
-
+instance FromBSON VendorContactLinksAlternate
+instance ToBSON VendorContactLinksAlternate
