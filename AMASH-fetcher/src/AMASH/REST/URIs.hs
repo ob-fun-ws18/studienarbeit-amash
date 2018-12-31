@@ -17,7 +17,8 @@ module AMASH.REST.URIs (
         appsPaged,
         buildRankingURI,
 
-        vendor
+        vendor,
+        vendorContacts
     ) where
 
 import AMASH.Constants
@@ -96,6 +97,12 @@ buildRankingURI application appsListFilter page = apps
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-vendors-vendorId-get
 vendor :: String -> String
 vendor vendorId = baseURI ++ "/vendors/" ++ vendorId
+
+-- | https://developer.atlassian.com/platform/marketplace/rest/#api-vendors-vendorId-contacts-get
+vendorContacts :: String -> String
+vendorContacts vendorId = vendor vendorId ++ "/contacts"
+
+-----------------------------------------------------------------------
 
 pageParams :: Integer -> String
 pageParams page = "limit=" ++ (show resultsPerPage) ++ "&offset=" ++ (show $ page * resultsPerPage)

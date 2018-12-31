@@ -4,6 +4,7 @@ import AMASH.Util
 import AMASH.Constants
 import AMASH.REST.URIs (buildRankingURI)
 import AMASH.Data.AppsList
+
 import Network.HTTP.Conduit (simpleHttp)
 import Data.Text
 import Data.Aeson
