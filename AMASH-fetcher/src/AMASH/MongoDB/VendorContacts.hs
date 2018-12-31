@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module AMASH.MongoDB.VendorContacts where
+module AMASH.MongoDB.VendorContacts (persistVendorContacts) where
 
 import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Helpers
