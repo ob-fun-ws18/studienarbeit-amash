@@ -13,7 +13,6 @@ import AMASH.MongoDB
 import AMASH.Constants
 import AMASH.Util
 import AMASH.REST
-import AMASH.Data.Vendor.StorableVendorContact as StorableVendorContact
 
 import qualified Data.Text as Text -- TODO remove after implementing fetchApps
 import Database.MongoDB
@@ -47,10 +46,13 @@ fetchAndPersistVendor :: Pipe -> String -> (Text.Text, Integer) -> IO ()
 fetchAndPersistVendor pipe totalVendors (vendorKey, currentVendor) = do
     putStrLn $ "Fetching vendor '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
 
-    maybeVendorContacts <- fetchVendorContacts vendorKey
-    when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
+    -- TODO: uncomment
+    --maybeVendorContacts <- fetchVendorContacts vendorKey
+    --when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
 
-    --saveNewRankings pipe application appsListFilter result
+    maybeVendorMetaData <- fetchVendorMetaData vendorKey
+    --when (isJust maybeVendorMetaData) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorMetaData)
+
     putStrLn "----------------------------------------"
 
 fetchApps pipe = putStrLn "Not yet implemented."
