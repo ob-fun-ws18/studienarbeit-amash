@@ -20,10 +20,15 @@ getAllKeys pipe collection = do
     bsonValues <- access pipe master "amash" $ find (select [] collection) >>= rest
     return $ map (unValue . valueAt "key") bsonValues
 
-getAllAppKeys    pipe = getAllKeys pipe "plugins"
+getAllAppKeys    pipe = getAllKeys pipe "apps"
 getAllVendorKeys pipe = getAllKeys pipe "vendors"
 
+insertKeys pipe database keys = do
+    let docs = map (\key -> ["key" =: key]) keys
+    access pipe master "amash" $ insertMany_ database docs
 
+insertAppKeys pipe keys    = insertKeys pipe "apps" keys
+insertVendorKeys pipe keys = insertKeys pipe "vendors" keys
 
 -- | Builds an action that fetches the last saved rankings entry in for an application and category.
 --   The fetched ranking can either directly contain "rankings" or have a reference to an "unchangedSince" object.

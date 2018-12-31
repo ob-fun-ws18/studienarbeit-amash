@@ -37,7 +37,7 @@ instance FromJSON AppVendor
 instance ToJSON AppVendor
 
 appsResponseToAppKeys :: AppsListResponse -> [Text]
-appsResponseToAppKeys appsResponse = Prelude.map key (addons $ _embedded appsResponse)
+appsResponseToAppKeys appsResponse = Prelude.map (strip . key) (addons $ _embedded appsResponse)
 
 appsResponseToVendorKeys :: AppsListResponse -> [Text]
-appsResponseToVendorKeys appsResponse = Prelude.map (replace "/rest/2/vendors/" "" . href . vendor . _links) (addons $ _embedded appsResponse)
+appsResponseToVendorKeys appsResponse = Prelude.map (strip . replace "/rest/2/vendors/" "" . href . vendor . _links) (addons $ _embedded appsResponse)

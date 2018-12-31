@@ -63,15 +63,26 @@ runFullSetup pipe = do
     putStrLn "[Step 2/2] Fill the DB with untracked app and vendor keys"
 
     savedAppKeys    <- getAllAppKeys    pipe
-    putStrLn $ (show $ Prelude.length savedAppKeys) ++ " app keys already in the DB.."
+    putStrLn $ (show $ Prelude.length savedAppKeys) ++ " app keys stored in the DB.."
 
     savedVendorKeys <- getAllVendorKeys pipe
-    putStrLn $ (show $ Prelude.length savedVendorKeys) ++ " vendor keys already in the DB.."
+    putStrLn $ (show $ Prelude.length savedVendorKeys) ++ " vendor keys stored in the DB.."
 
     allExistingKeys <- fetchAllExistingKeys
 
-    let newAppKeys    = (fst allExistingKeys) \\ savedAppKeys
-        newVendorKeys = nub $ (snd allExistingKeys) \\ savedVendorKeys
+    let fetchedAppKeys      = fst allExistingKeys
+        fetchedVendorKeys   = nub $ snd allExistingKeys -- vendor keys can be duplicate
+        newAppKeys          = fetchedAppKeys \\ savedAppKeys
+        newVendorKeys       = fetchedVendorKeys \\ savedVendorKeys
+        countNewApps        = show $ Prelude.length newAppKeys
+        countNewVendors     = show $ Prelude.length newVendorKeys
+        countFetchedApps    = show $ Prelude.length fetchedAppKeys
+        countFetchedVendors = show $ Prelude.length fetchedVendorKeys
 
-    putStrLn $ (show $ Prelude.length newAppKeys) ++ " new app keys found."
-    putStrLn $ (show $ Prelude.length newVendorKeys) ++ " new vendor keys found."
+    putStrLn $ countNewApps ++ "/" ++ countFetchedApps ++ " of the fetched app keys are new."
+    insertAppKeys pipe newAppKeys
+    putStrLn $ "Saved " ++ countNewApps ++ " new app keys in the database."
+
+    putStrLn $ countNewVendors ++ "/" ++ countFetchedVendors ++ " of the fetched vendor keys are new."
+    insertVendorKeys pipe newVendorKeys
+    putStrLn $ "Saved " ++ countNewVendors ++ " new vendor keys in the database."

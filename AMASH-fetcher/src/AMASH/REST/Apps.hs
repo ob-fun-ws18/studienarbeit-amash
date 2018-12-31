@@ -11,7 +11,7 @@ import Control.Monad
 import Network.HTTP.Conduit (simpleHttp)
 
 -- | Fetches all existing app and vendor keys and returns them in a tuple.
-fetchAllExistingKeys :: IO ([Text], [Text]) -- ^ All app keys and corresponding vendor keys.
+fetchAllExistingKeys :: IO ([Text], [Text]) -- ^ All app keys and corresponding vendor keys. (vendor keys can be duplicate)
 fetchAllExistingKeys = do
     let getJSON = simpleHttp URIs.apps
     e <- (eitherDecode <$> getJSON) :: IO (Either String AppsList.AppsListResponse)
@@ -27,7 +27,7 @@ fetchAllExistingKeys = do
 
 -- | Fetches all existing app and vendor keys and returns them in a tuple starting from a page number.
 fetchAllExistingKeys' :: Integer             -- ^ The page number.
-                      -> IO ([Text], [Text]) -- ^ All app keys and corresponding vendor keys.
+                      -> IO ([Text], [Text]) -- ^ All app keys and corresponding vendor keys. (vendor keys can be duplicate)
 fetchAllExistingKeys' page = do
     let getJSON = simpleHttp $ URIs.appsPaged page
     e <- (eitherDecode <$> getJSON) :: IO (Either String AppsList.AppsListResponse)
