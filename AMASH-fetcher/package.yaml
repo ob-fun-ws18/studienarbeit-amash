@@ -29,6 +29,7 @@ dependencies:
 - mongoDB
 - mtl
 - bson
+- ghc-prim
 
 library:
   source-dirs: src

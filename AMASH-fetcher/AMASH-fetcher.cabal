@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a7b725e49c129ad43f8dfefa1421a1b41d84301a630a166ac0bb32591da071f6
+-- hash: 05149ed33d86dab79f3991307b23fdea5e3fa8d1250dbf261d390b70d8631360
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -62,6 +62,7 @@ library
       AMASH.REST.URIs
       AMASH.REST.VendorContacts
       AMASH.Util
+      GenericBson
       Lib
   other-modules:
       Paths_AMASH_fetcher
@@ -72,6 +73,7 @@ library
     , base >=4.7 && <5
     , bson
     , bytestring
+    , ghc-prim
     , http-conduit
     , mongoDB
     , mtl
@@ -92,6 +94,7 @@ executable AMASH-fetcher-exe
     , base >=4.7 && <5
     , bson
     , bytestring
+    , ghc-prim
     , http-conduit
     , mongoDB
     , mtl
@@ -115,6 +118,7 @@ test-suite AMASH-fetcher-test
     , base >=4.7 && <5
     , bson
     , bytestring
+    , ghc-prim
     , hspec
     , http-conduit
     , mongoDB
@@ -138,6 +142,7 @@ benchmark AMASH-fetcher-benchmark
     , bson
     , bytestring
     , criterion
+    , ghc-prim
     , http-conduit
     , mongoDB
     , mtl

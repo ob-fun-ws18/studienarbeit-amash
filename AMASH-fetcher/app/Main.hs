@@ -6,6 +6,8 @@ import AMASH
 import Control.Monad (when)
 import System.Environment
 
+import GenericBson
+
 main :: IO ()
 main = do
     args <- getArgs

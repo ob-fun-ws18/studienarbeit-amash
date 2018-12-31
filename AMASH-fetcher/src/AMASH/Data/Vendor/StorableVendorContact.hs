@@ -7,6 +7,7 @@ import qualified AMASH.Data.Vendor.VendorContacts as Unstorable
 
 import Data.Text
 import Data.Aeson
+import GenericBson
 import GHC.Generics
 
 data StorableVendorContact = StorableVendorContact { displayName :: Text
@@ -24,3 +25,6 @@ toStorableContact contact = StorableVendorContact {
 
 instance FromJSON StorableVendorContact
 instance ToJSON StorableVendorContact
+
+instance FromBSON StorableVendorContact
+instance ToBSON StorableVendorContact

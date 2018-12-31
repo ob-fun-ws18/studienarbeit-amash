@@ -9,6 +9,7 @@ import Data.Time.Clock
 import Data.Maybe
 import Control.Monad (when)
 import Control.Monad.IO.Class (MonadIO)
+import GenericBson
 
 import AMASH.Util
 import AMASH.Constants

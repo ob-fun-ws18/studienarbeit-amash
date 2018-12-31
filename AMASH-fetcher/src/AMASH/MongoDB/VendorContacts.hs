@@ -5,6 +5,7 @@ module AMASH.MongoDB.VendorContacts (persistVendorContacts) where
 import AMASH.MongoDB.Querys
 import AMASH.Data.Vendor.StorableVendorContact
 
+import GenericBson
 import Database.MongoDB
 import Data.Text
 import Data.Time.Clock
@@ -36,7 +37,7 @@ checkIfContactsAreNew' bsonDoc rankings = do
 -}
 persistVendorContacts :: Pipe -> Text -> [StorableVendorContact] -> IO ()
 persistVendorContacts pipe vendorId contacts = do
-    let docs   = Prelude.map docFromStorable contacts
+    let docs   = Prelude.map toBSON contacts
         amount = Prelude.length docs
 
     -- TODO: check if contacts are new!!!
@@ -48,5 +49,3 @@ persistVendorContacts pipe vendorId contacts = do
     access pipe master "amash" $ modify selectDocument pushNewContacts
     putStrLn "Persisted new vendorContacts!!"
     print docs
-
-docFromStorable StorableVendorContact{displayName=d, userId=u} = ["displayName" =: d, "userId" =: u]

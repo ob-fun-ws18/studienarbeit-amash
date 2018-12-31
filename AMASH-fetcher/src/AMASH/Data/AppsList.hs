@@ -6,7 +6,6 @@ module AMASH.Data.AppsList where
 import Data.Text
 import Data.Aeson
 import GHC.Generics
-import Data.Time.Clock -- FÜR UTCTime ? TODO: Remove if not needed (it probably isnt)
 
 data AppsListResponse = AppsListResponse { count :: Int
                                          , _embedded :: AppsList
