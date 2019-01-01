@@ -3,7 +3,7 @@
 module Main where
 
 import AMASH
-import Control.Monad (unless)
+import Control.Monad (unless, when)
 import System.Environment
 
 main :: IO ()

@@ -22,5 +22,5 @@ fetchVendorMetaData vendorId = do
             putStrLn $ "> Failed to fetch contacts because of error: " ++ err
             return Nothing
         Right vendorMetaData -> do
-            putStrLn $ "> Fetched vendor metadata."
+            putStrLn "> Fetched vendor metadata."
             return $ Just vendorMetaData

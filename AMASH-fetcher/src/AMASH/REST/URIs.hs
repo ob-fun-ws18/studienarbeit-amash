@@ -89,8 +89,8 @@ appsPaged page = baseURI ++ "/addons?" ++ pageParams page
 
 buildRankingURI :: Application -> AppsListFilter -> Integer -> String
 buildRankingURI application appsListFilter page = apps
-                                        ++ "?application=" ++ (showApplication application)
-                                        ++ "&filter=" ++ (showInKebab appsListFilter)
+                                        ++ "?application=" ++ showApplication application
+                                        ++ "&filter=" ++ showInKebab appsListFilter
                                         ++ "&" ++ pageParams page
 
 -----------------------------------------------------------------------
@@ -107,15 +107,15 @@ vendorApps :: String -> String
 vendorApps vendorId = baseURI ++ "/addons/vendor/" ++ vendorId
 
 vendorAppsPaged :: String -> Integer -> String
-vendorAppsPaged vendorId page = (vendorApps vendorId) ++ "?" ++ (pageParams page)
+vendorAppsPaged vendorId page = vendorApps vendorId ++ "?" ++ pageParams page
 
 vendorArchivedApps :: String -> String
 vendorArchivedApps vendorId = baseURI ++ "/addons/archived/vendor/" ++ vendorId
 
 vendorArchivedAppsPaged :: String -> Integer -> String
-vendorArchivedAppsPaged vendorId page = (vendorArchivedApps vendorId) ++ "?" ++ (pageParams page)
+vendorArchivedAppsPaged vendorId page = vendorArchivedApps vendorId ++ "?" ++ pageParams page
 
 -----------------------------------------------------------------------
 
 pageParams :: Integer -> String
-pageParams page = "limit=" ++ (show resultsPerPage) ++ "&offset=" ++ (show $ page * resultsPerPage)
+pageParams page = "limit=" ++ show resultsPerPage ++ "&offset=" ++ show (page * resultsPerPage)

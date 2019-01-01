@@ -23,5 +23,5 @@ fetchVendorContacts vendorId = do
             putStrLn $ "> Failed to fetch contacts because of error: " ++ err
             return Nothing
         Right vendorContacts -> do
-            putStrLn $ "> Fetched " ++ (show $ VendorContacts.count vendorContacts) ++ " contact(s)."
+            putStrLn $ "> Fetched " ++ show (VendorContacts.count vendorContacts) ++ " contact(s)."
             return . Just $ StorableVendorContact.vendorContactsToStorable vendorContacts

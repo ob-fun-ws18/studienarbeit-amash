@@ -14,13 +14,13 @@ import Control.Monad (liftM2, when)
 fetchVendorApps :: Text -> IO [Text]
 fetchVendorApps vendorId = do
     vendorApps <- fetchVendorApps' (vendorAppsPaged $ unpack vendorId) 0
-    putStrLn $ "> Fetched " ++ (show $ Prelude.length vendorApps) ++ " apps for vendor."
+    putStrLn $ "> Fetched " ++ show (Prelude.length vendorApps) ++ " apps for vendor."
     return vendorApps
 
 fetchVendorArchivedApps :: Text -> IO [Text]
 fetchVendorArchivedApps vendorId = do
     vendorApps <- fetchVendorApps' (vendorArchivedAppsPaged $ unpack vendorId) 0
-    putStrLn $ "> Fetched " ++ (show $ Prelude.length vendorApps) ++ " archived apps for vendor."
+    putStrLn $ "> Fetched " ++ show (Prelude.length vendorApps) ++ " archived apps for vendor."
     return vendorApps
 
 fetchVendorApps' pagedUri currentPage = do

@@ -14,11 +14,11 @@ import Control.Monad (liftM2, when)
 -- TODO: Später sollte vielleicht Application, AppsListFilter und Hosting alles Maybe werden.
 getTop100 :: Application -> AppsListFilter -> IO [Text]
 getTop100 application appsListFilter = do
-    putStrLn $ "Fetching rankings for " ++ (showRanking application appsListFilter) ++ "."
+    putStrLn $ "Fetching rankings for " ++ showRanking application appsListFilter ++ "."
     let uriBuilder = buildRankingURI application appsListFilter
     getRanking uriBuilder 100
 
-getRanking :: (Integer -> [Char]) -> Integer -> IO [Text]
+getRanking :: (Integer -> String) -> Integer -> IO [Text]
 getRanking uriBuilder maxResults = getRanking' uriBuilder maxResults 0
 getRanking' uriBuilder maxResults currentPage = do
     let uri = uriBuilder currentPage
@@ -40,5 +40,5 @@ getRanking' uriBuilder maxResults currentPage = do
             when (fetchedAmount < resultsPerPage) (putStrLn "Fetched amount was less than page size -> Reached max results.")
 
             if totalAmount >= maxResults || fetchedAmount < resultsPerPage
-            then return $ apps
+            then return apps
             else Prelude.take (fromIntegral maxResults) <$> liftM2 (++) (return apps) fetchNextPage

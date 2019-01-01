@@ -38,7 +38,7 @@ fetchAllExistingKeys' page = do
             return ([], [])
         Right response -> do
             let existingApps     = show $ AppsList.count response
-                currentlyFetched = show $ page * resultsPerPage + (fromIntegral $ Prelude.length appKeys)
+                currentlyFetched = show $ page * resultsPerPage + fromIntegral (Prelude.length appKeys)
                 appKeys          = AppsList.appsResponseToAppKeys response
                 vendorKeys       = AppsList.appsResponseToVendorKeys response
 
@@ -50,4 +50,4 @@ fetchAllExistingKeys' page = do
                 return (appKeys, vendorKeys)
             else do
                 nextResult <- fetchAllExistingKeys' (page + 1)
-                return $ (appKeys ++ fst nextResult, vendorKeys ++ snd nextResult)
+                return (appKeys ++ fst nextResult, vendorKeys ++ snd nextResult)
