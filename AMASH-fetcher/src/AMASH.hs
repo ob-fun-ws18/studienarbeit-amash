@@ -48,11 +48,11 @@ fetchAndPersistVendor :: Pipe -> String -> (Text.Text, Integer) -> IO ()
 fetchAndPersistVendor pipe totalVendors (vendorKey, currentVendor) = do
     putStrLn $ ">> Fetching vendor '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
 
-    maybeVendorContacts <- fetchVendorContacts vendorKey
-    when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
-
     maybeVendorMetaData <- fetchVendorMetaData vendorKey
     when (isJust maybeVendorMetaData) (persistVendorMetaData pipe vendorKey $ fromJust maybeVendorMetaData)
+
+    maybeVendorContacts <- fetchVendorContacts vendorKey
+    when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
 
     putStrLn "----------------------------------------"
 
