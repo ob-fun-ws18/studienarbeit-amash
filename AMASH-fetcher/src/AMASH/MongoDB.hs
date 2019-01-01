@@ -6,7 +6,8 @@ module AMASH.MongoDB (
     module AMASH.MongoDB.Setup,
     module AMASH.MongoDB.Rankings,
     module AMASH.MongoDB.VendorContacts,
-    module AMASH.MongoDB.VendorMetaData
+    module AMASH.MongoDB.VendorMetaData,
+    module AMASH.MongoDB.VendorApps
 ) where
 
 import AMASH.MongoDB.Connection
@@ -15,3 +16,4 @@ import AMASH.MongoDB.Setup
 import AMASH.MongoDB.Rankings
 import AMASH.MongoDB.VendorContacts
 import AMASH.MongoDB.VendorMetaData
+import AMASH.MongoDB.VendorApps

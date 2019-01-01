@@ -54,11 +54,11 @@ fetchAndPersistVendor pipe totalVendors (vendorKey, currentVendor) = do
     maybeVendorContacts <- fetchVendorContacts vendorKey
     when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
 
-    maybeVendorApps <- fetchVendorApps vendorKey
-    --when (isJust maybeVendorApps) (persistVendorApps pipe vendorKey $ fromJust maybeVendorApps)
+    vendorApps <- fetchVendorApps vendorKey
+    when (not $ Prelude.null vendorApps) (persistVendorApps pipe vendorKey vendorApps)
 
-    maybeVendorArchivedApps <- fetchVendorApps vendorKey
-    --when (isJust maybeVendorApps) (persistVendorApps pipe vendorKey $ fromJust maybeVendorApps)
+    vendorArchivedApps <- fetchVendorArchivedApps vendorKey
+    when (not $ Prelude.null vendorArchivedApps) (persistVendorArchivedApps pipe vendorKey vendorApps)
 
     putStrLn "----------------------------------------"
 
