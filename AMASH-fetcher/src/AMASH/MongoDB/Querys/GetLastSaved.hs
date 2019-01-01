@@ -12,26 +12,12 @@ import Control.Monad.IO.Class (MonadIO)
 
 -- | Builds an action that fetches the last saved rankings entry of an application and category.
 getLastSavedRankings :: (MonadIO m)
-    => Application          -- ^ The application.
-    -> AppsListFilter       -- ^ The filter / category.
+    => Text.Text          -- ^ The application.
     -> Action m [Document]  -- ^ The resulting action.
-getLastSavedRankings application rankingCategory = aggregate "rankings" [
-        ["$match"   =: [
-            "application" =: appName
-        ]],
-        ["$unwind"  =: arrayName'],
-        ["$match" =: [
-            Text.pack (arrayName ++ ".unchangedSince") =: ["$exists" =: False]
-        ]],
-        ["$limit"   =: 1],
-        ["$project" =: [
-            "_id"      =: 0,
-            "date"     =: arrayName' ++ ".date",
-            "rankings" =: arrayName' ++ ".rankings"
-        ]]
-    ] where arrayName  = showInKebab rankingCategory
-            arrayName' = "$" ++ arrayName
-            appName    = showApplication application
+getLastSavedRankings collectionName = aggregate collectionName [
+        ["$sort"   =: ["lastChecked" =: -1]],
+        ["$limit"   =: 1]
+    ]
 
 -- | Builds an action that fetches the last saved contacts entry for a vendor id.
 getLastSavedVendorContacts :: (MonadIO m)

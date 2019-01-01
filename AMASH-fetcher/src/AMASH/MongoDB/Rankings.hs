@@ -19,28 +19,32 @@ import AMASH.MongoDB.Setup
 import AMASH.MongoDB.Helpers
 
 saveNewRankings pipe application rankingCategory fetchedRankings = do
-    let getLastSavedAction = access pipe master "amash" $ getLastSavedRankings application rankingCategory
-        compareWithOldData = compareFetchedAndOldData fetchedRankings "rankings"
+    let collectionName       = Text.pack $ rankingsCollectionName application rankingCategory
+        getLastSavedAction   = access pipe master "amash" $ getLastSavedRankings collectionName
+        compareWithOldDataFn = compareFetchedAndOldData fetchedRankings "rankings"
 
-    checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction fetchedRankings compareWithOldData
+    checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction compareWithOldDataFn
 
-    let rankingsAreEqual    = fst checkResult
-        maybeUnchangedSince = snd checkResult :: Maybe UTCTime
+    let rankingsAreEqual = fst checkResult
+        maybeObjectId    = snd checkResult :: Maybe ObjectId
 
-    if   rankingsAreEqual && isJust maybeUnchangedSince
-    then puteUnchangedSinceIntoDatabase pipe application rankingCategory (fromJust maybeUnchangedSince :: UTCTime)
-    else puteNewRankingsIntoDatabase pipe application rankingCategory fetchedRankings
+    if   rankingsAreEqual && isJust maybeObjectId
+    then updateLastChangedTimestamp pipe collectionName (fromJust maybeObjectId :: ObjectId)
+    else putNewRankingsIntoDatabase pipe collectionName fetchedRankings
 
-puteNewRankingsIntoDatabase pipe application rankingCategory rankings = do
+putNewRankingsIntoDatabase pipe collectionName rankings = do
     currentDateTime <- getCurrentTime
-    let selectDocument  = selectApplication application
-        pushNewRankings = pushRankings rankingCategory rankings currentDateTime
-    access pipe master "amash" $ modify selectDocument pushNewRankings
+    let docToPersist = ["fetched" =: currentDateTime
+                       , "lastChecked" =: currentDateTime
+                       , "rankings" =: rankings]
+    access pipe master "amash" $ insert_ collectionName docToPersist
     putStrLn "Saved new rankings in the database."
 
-puteUnchangedSinceIntoDatabase pipe application rankingCategory unchangedSince = do
+updateLastChangedTimestamp pipe collectionName objectId = do
     currentDateTime <- getCurrentTime
-    let selectDocument  = selectApplication application
-        pushNewData     = pushUnchangedSinceRankings rankingCategory currentDateTime unchangedSince
-    access pipe master "amash" $ modify selectDocument pushNewData
-    putStrLn "Persisted 'unchanged since' pointer in the database."
+
+    let selectDocument    = selectByObjectId collectionName objectId
+        updateLastChecked = ["$set" =: ["lastChecked" =: currentDateTime]]
+
+    access pipe master "amash" $ modify selectDocument updateLastChecked
+    putStrLn $ "Updated lastChecked of old entry to '" ++ (show currentDateTime) ++ "'."

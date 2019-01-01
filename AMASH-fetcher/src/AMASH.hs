@@ -21,7 +21,7 @@ import Control.Monad (when)
 
 fetchRankings pipe = do
     putStrLn ">>> Fetching rankings."
-    mapM_ (fetchAndPersistRanking pipe) (take 1 rankingAppsAndFilters) -- TODO: remove "take 1" !!!
+    mapM_ (fetchAndPersistRanking pipe) rankingAppsAndFilters --(take 1 rankingAppsAndFilters) -- TODO: remove "take 1" !!!
     putStrLn "----------------------------------------"
     putStrLn ">>> All rankings fetched."
 

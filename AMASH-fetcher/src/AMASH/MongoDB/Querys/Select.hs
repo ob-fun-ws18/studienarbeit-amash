@@ -8,6 +8,9 @@ import Database.MongoDB
 import Database.MongoDB.Query (Select)
 import Data.Text
 
+-- | Selects a document by its objectId from a given collection.
+selectByObjectId collectionName objectId = select ["_id" =: objectId] collectionName
+
 -- | Builds a selection for an application from the rankings database.
 selectApplication :: Select aQueryOrSelection
     => Application       -- ^ The application.

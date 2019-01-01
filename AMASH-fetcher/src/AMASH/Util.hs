@@ -11,6 +11,8 @@ showRanking application category =
         catName = showInKebab category
     in "'" ++ appName ++ "/" ++ catName ++ "'"
 
+rankingsCollectionName application rankingCategory = "rankings-" ++ (showApplication application) ++ "-" ++ (showInKebab rankingCategory)
+
 -- TODO: write tests for this!
 -- | Given two lists tests if at least one element of the first list is also an element of the second list.
 elemAtLeastOne :: (Eq a)

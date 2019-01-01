@@ -34,13 +34,3 @@ pushVendorContacts dateTime contacts = pushDocument "contacts" ["date" =: dateTi
 
 pushUnchangedSinceVendorContacts dateTime unchangedSince = pushUnchangedSince "contacts" dateTime unchangedSince
 
-
--- | Builds an document for pushing new rankings into a given rankingCategory with a timestamp.
-pushRankings rankingCategory rankings dateTime =
-    let arrayName = Text.pack $ showInKebab rankingCategory
-    in pushDocument arrayName ["date" =: dateTime, "rankings" =: rankings]
-
-pushUnchangedSinceRankings rankingCategory dateTime unchangedSince =
-    let arrayName = Text.pack $ showInKebab rankingCategory
-    in pushUnchangedSince arrayName dateTime unchangedSince
-

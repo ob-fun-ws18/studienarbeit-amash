@@ -18,10 +18,11 @@ persistVendorMetaData pipe vendorId vendorMetaData = do
         getLastSavedAction = access pipe master "amash" $ getLastSavedVendorContacts vendorId
         compareWithOldData = compareFetchedAndOldData vendorMetaData "metadata"
 
-    checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction vendorMetaData compareWithOldData
+    checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction compareWithOldData
 
     let areEqual            = fst checkResult
-        maybeUnchangedSince = snd checkResult :: Maybe UTCTime
+        --maybeUnchangedSince = snd checkResult :: Maybe UTCTime
+        maybeUnchangedSince = Nothing :: Maybe UTCTime
 
     if   areEqual && isJust maybeUnchangedSince
     then putUnchangedSinceIntoDatabase pipe vendorId maybeUnchangedSince
