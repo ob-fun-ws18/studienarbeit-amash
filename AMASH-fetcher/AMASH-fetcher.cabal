@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f82d9e01e8e81ea888456f04eeec89406168959ec17de9c478f53249c783cd57
+-- hash: 8a96c6aea2a7a03c6e48eee6962187c2ecc602838f39447bdf435218f71b8b4a
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -51,7 +51,6 @@ library
       AMASH.MongoDB.Helpers
       AMASH.MongoDB.Querys
       AMASH.MongoDB.Querys.GetLastSaved
-      AMASH.MongoDB.Querys.Push
       AMASH.MongoDB.Querys.Select
       AMASH.MongoDB.Querys.TrackedKeys
       AMASH.MongoDB.Rankings

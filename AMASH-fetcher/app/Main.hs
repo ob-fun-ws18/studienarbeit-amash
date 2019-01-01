@@ -21,6 +21,6 @@ main = do
         when (["--setup",    "-s"] `elemAtLeastOne` args) (runSetup pipe)
         when (["--rankings", "-r"] `elemAtLeastOne` args) (fetchRankings pipe)
         when (["--vendors",  "-v"] `elemAtLeastOne` args) (fetchVendors pipe)
-        --when (["--apps",     "-a"] `elemAtLeastOne` args) (fetchApps pipe)
+        when (["--apps",     "-a"] `elemAtLeastOne` args) (fetchApps pipe)
         putStrLn "Successfully finished. Exiting AMASH fetcher."
     else putStrLn "Authentication failed! Are the credentials set in your ENV correct?"

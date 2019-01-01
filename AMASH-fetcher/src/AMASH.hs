@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-} -- TODO: remove
+
 module AMASH (
     fetchRankings,
     fetchVendors,
@@ -38,20 +40,19 @@ fetchVendors pipe = do
     let amountOfVendors = show $ length trackedVendorKeys
     putStrLn $ ">>> Fetching vendors. Found " ++ amountOfVendors ++ " vendor keys in the database."
     putStrLn "----------------------------------------"
-    --mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip (take 1 trackedVendorKeys) [1..]) -- TODO: remove "take 1" !!!
-    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip ["111"] [1..])  -- TODO replace with line above
+    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip trackedVendorKeys [1..])
+    --mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip ["111"] [1..]) -- TODO remove (only for testing)
     putStrLn ">>> All vendors fetched."
 
 fetchAndPersistVendor :: Pipe -> String -> (Text.Text, Integer) -> IO ()
 fetchAndPersistVendor pipe totalVendors (vendorKey, currentVendor) = do
-    putStrLn $ "Fetching vendor '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
+    putStrLn $ ">> Fetching vendor '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
 
     maybeVendorContacts <- fetchVendorContacts vendorKey
     when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
 
-    -- TODO: implement / upgrade to new schema
-    --maybeVendorMetaData <- fetchVendorMetaData vendorKey
-    --when (isJust maybeVendorMetaData) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorMetaData)
+    maybeVendorMetaData <- fetchVendorMetaData vendorKey
+    when (isJust maybeVendorMetaData) (persistVendorMetaData pipe vendorKey $ fromJust maybeVendorMetaData)
 
     putStrLn "----------------------------------------"
 

@@ -10,6 +10,7 @@ import Data.Time.Clock
 import Database.MongoDB
 import Control.Monad.IO.Class (MonadIO)
 
+
 -- | Builds an action that fetches the last saved rankings entry of an application and category.
 getLastSavedRankings :: (MonadIO m)
     => Text.Text          -- ^ The application.
@@ -19,11 +20,12 @@ getLastSavedRankings collectionName = aggregate collectionName [
         ["$limit"   =: 1]
     ]
 
--- | Builds an action that fetches the last saved contacts entry for a vendor id.
-getLastSavedVendorContacts :: (MonadIO m)
+
+getLastSavedVendorEntry :: (MonadIO m)
     => Text.Text            -- ^ The vendor id.
+    -> Text.Text            -- ^ The collection name.
     -> Action m [Document]  -- ^ The resulting action.
-getLastSavedVendorContacts vendorId = aggregate "vendor-contacts" [
+getLastSavedVendorEntry collectionName vendorId = aggregate collectionName [
         ["$match"   =: [
             "vendor" =: vendorId
         ]],
@@ -31,22 +33,10 @@ getLastSavedVendorContacts vendorId = aggregate "vendor-contacts" [
         ["$limit"   =: 1]
     ]
 
--- | Builds an action that fetches the last saved contacts entry for a vendor id.
-getLastSavedVendorMetaData :: (MonadIO m)
-    => Text.Text            -- ^ The vendor id.
-    -> Action m [Document]  -- ^ The resulting action.
-getLastSavedVendorMetaData vendorId = aggregate "vendors" [
-        ["$match"   =: [
-            "key" =: vendorId
-        ]],
-        ["$unwind"  =: "$metadata"],
-        ["$match" =: [
-            "metadata.unchangedSince" =: ["$exists" =: False]
-        ]],
-        ["$limit"   =: 1],
-        ["$project" =: [
-            "_id"      =: 0,
-            "date"     =: "$metadata.date",
-            "metadata" =: "$metadata.metadata"
-        ]]
-    ]
+-- | Builds an action that fetches the last saved vendor contacts entry of a vendor id.
+getLastSavedVendorContacts :: (MonadIO m) => Text.Text -> Action m [Document]
+getLastSavedVendorContacts vendorId = getLastSavedVendorEntry "vendor-contacts" vendorId
+
+-- | Builds an action that fetches the last saved vendor metadata entry for a vendor id.
+getLastSavedVendorMetaData :: (MonadIO m) => Text.Text -> Action m [Document]
+getLastSavedVendorMetaData vendorId = getLastSavedVendorEntry "vendor-metadata" vendorId
