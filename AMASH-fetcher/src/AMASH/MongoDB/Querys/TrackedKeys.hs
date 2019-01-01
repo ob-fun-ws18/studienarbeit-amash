@@ -32,5 +32,5 @@ insertTrackedKeys pipe database keys = do
     let docs = map (\key -> ["key" =: key]) keys
     access pipe master "amash" $ insertMany_ database docs
 
-insertTrackedAppKeys    pipe keys = insertTrackedKeys pipe "tracked-apps" keys
-insertTrackedVendorKeys pipe keys = insertTrackedKeys pipe "tracked-vendors" keys
+insertTrackedAppKeys    pipe = insertTrackedKeys pipe "tracked-apps"
+insertTrackedVendorKeys pipe = insertTrackedKeys pipe "tracked-vendors"

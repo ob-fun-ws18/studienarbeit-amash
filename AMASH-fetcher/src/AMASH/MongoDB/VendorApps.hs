@@ -18,8 +18,8 @@ import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Setup
 import AMASH.MongoDB.Helpers
 
-persistVendorApps         pipe vendorId fetchedData = persistVendorApps' pipe "vendor-apps" vendorId fetchedData
-persistVendorArchivedApps pipe vendorId fetchedData = persistVendorApps' pipe "vendor-archived-apps" vendorId fetchedData
+persistVendorApps         pipe = persistVendorApps' pipe "vendor-apps"
+persistVendorArchivedApps pipe = persistVendorApps' pipe "vendor-archived-apps"
 
 persistVendorApps' :: Pipe -> Text.Text -> Text.Text -> [Text.Text] -> IO ()
 persistVendorApps' pipe collectionName vendorId fetchedData = do
@@ -51,5 +51,5 @@ updateLastChangedTimestamp pipe collectionName objectId = do
         updateLastChecked = ["$set" =: ["lastChecked" =: currentDateTime]]
 
     access pipe master "amash" $ modify selectDocument updateLastChecked
-    putStrLn $ "Updated lastChecked of old entry to '" ++ (show currentDateTime) ++ "'."
+    putStrLn $ "Updated lastChecked of old entry to '" ++ show currentDateTime ++ "'."
 

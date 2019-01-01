@@ -35,8 +35,8 @@ getLastSavedVendorEntry collectionName vendorId = aggregate collectionName [
 
 -- | Builds an action that fetches the last saved vendor contacts entry of a vendor id.
 getLastSavedVendorContacts :: (MonadIO m) => Text.Text -> Action m [Document]
-getLastSavedVendorContacts vendorId = getLastSavedVendorEntry "vendor-contacts" vendorId
+getLastSavedVendorContacts = getLastSavedVendorEntry "vendor-contacts"
 
 -- | Builds an action that fetches the last saved vendor metadata entry for a vendor id.
 getLastSavedVendorMetaData :: (MonadIO m) => Text.Text -> Action m [Document]
-getLastSavedVendorMetaData vendorId = getLastSavedVendorEntry "vendor-metadata" vendorId
+getLastSavedVendorMetaData = getLastSavedVendorEntry "vendor-metadata"

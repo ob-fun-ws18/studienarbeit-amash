@@ -43,4 +43,4 @@ updateLastChangedTimestamp pipe objectId = do
         updateLastChecked = ["$set" =: ["lastChecked" =: currentDateTime]]
 
     access pipe master "amash" $ modify selectDocument updateLastChecked
-    putStrLn $ "Updated lastChecked of old entry to '" ++ (show currentDateTime) ++ "'."
+    putStrLn $ "Updated lastChecked of old entry to '" ++ show currentDateTime ++ "'."

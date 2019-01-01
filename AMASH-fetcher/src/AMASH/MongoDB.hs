@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module AMASH.MongoDB (
     module AMASH.MongoDB.Connection,
     module AMASH.MongoDB.Querys,

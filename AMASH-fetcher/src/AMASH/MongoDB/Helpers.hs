@@ -22,9 +22,9 @@ thereAreNoOlderEntries = do
 getLastSavedDataAndCompare pipe getLastSavedAction compareWithOldDataFn = do
     bsonDoc <- access pipe master "amash" getLastSavedAction
 
-    if   Prelude.length bsonDoc == 0
+    if   null bsonDoc
     then thereAreNoOlderEntries
-    else compareWithOldDataFn $ bsonDoc !! 0
+    else compareWithOldDataFn $ head bsonDoc
 
 -- | Compares fetchedData with last saved data. Needs attributeName to extract data from document.
 compareFetchedAndOldData fetchedData attributeName lastSavedData = do
@@ -36,7 +36,7 @@ compareFetchedAndOldData fetchedData attributeName lastSavedData = do
     when (isNothing maybeObjId) (error "Last saved entry does a '_id'! Saving completely new entry instead of updating.")
     when (isNothing maybeLastChecked) (error "Last saved entry does a 'lastChecked'! Saving completely new entry instead of updating.")
 
-    putStrLn $ "The last saved data is from '" ++ (show $ fromJust maybeLastChecked) ++ "'."
+    putStrLn $ "The last saved data is from '" ++ show (fromJust maybeLastChecked) ++ "'."
 
     if   dataIsEqual
     then putStrLn "UNCHANGED - The last saved data is equal to the newly fetched data."

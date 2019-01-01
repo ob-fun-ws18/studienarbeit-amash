@@ -18,10 +18,10 @@ runSetup pipe = do
     putStrLn "Find all existing app keys and their vendors and put untracked keys into the database."
 
     trackedAppKeys <- getAllTrackedAppKeys pipe
-    putStrLn $ (show $ Prelude.length trackedAppKeys) ++ " app keys stored in the DB.."
+    putStrLn $ show (Prelude.length trackedAppKeys) ++ " app keys stored in the DB.."
 
     trackedVendorKeys <- getAllTrackedVendorKeys pipe
-    putStrLn $ (show $ Prelude.length trackedVendorKeys) ++ " vendor keys stored in the DB.."
+    putStrLn $ show (Prelude.length trackedVendorKeys) ++ " vendor keys stored in the DB.."
 
     fetchedKeys <- fetchAllExistingKeys
 

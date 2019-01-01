@@ -19,7 +19,8 @@ import AMASH.REST
 import qualified Data.Text as Text -- TODO remove after implementing fetchApps
 import Database.MongoDB
 import Data.Maybe
-import Control.Monad (when)
+import Control.Monad (when, unless)
+import Data.Foldable (forM_)
 
 fetchRankings pipe = do
     putStrLn ">>> Fetching rankings."
@@ -30,7 +31,7 @@ fetchRankings pipe = do
 fetchAndPersistRanking pipe (application, appsListFilter) = do
     putStrLn "----------------------------------------"
     result <- getTop100 application appsListFilter
-    putStrLn $ "Successfully fetched " ++ (show $ Prelude.length result) ++ " results."
+    putStrLn $ "Successfully fetched " ++ show (Prelude.length result) ++ " results."
     saveNewRankings pipe application appsListFilter result
 
 
@@ -46,19 +47,19 @@ fetchVendors pipe = do
 
 fetchAndPersistVendor :: Pipe -> String -> (Text.Text, Integer) -> IO ()
 fetchAndPersistVendor pipe totalVendors (vendorKey, currentVendor) = do
-    putStrLn $ ">> Fetching vendor '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
+    putStrLn $ ">> Fetching vendor '" ++ Text.unpack vendorKey ++ "'. (" ++ show currentVendor ++ "/" ++ totalVendors ++ ")"
 
     maybeVendorMetaData <- fetchVendorMetaData vendorKey
-    when (isJust maybeVendorMetaData) (persistVendorMetaData pipe vendorKey $ fromJust maybeVendorMetaData)
+    forM_ maybeVendorMetaData (persistVendorMetaData pipe vendorKey)
 
     maybeVendorContacts <- fetchVendorContacts vendorKey
-    when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
+    forM_ maybeVendorContacts (persistVendorContacts pipe vendorKey)
 
     vendorApps <- fetchVendorApps vendorKey
-    when (not $ Prelude.null vendorApps) (persistVendorApps pipe vendorKey vendorApps)
+    unless (Prelude.null vendorApps) (persistVendorApps pipe vendorKey vendorApps)
 
     vendorArchivedApps <- fetchVendorArchivedApps vendorKey
-    when (not $ Prelude.null vendorArchivedApps) (persistVendorArchivedApps pipe vendorKey vendorApps)
+    unless (Prelude.null vendorArchivedApps) (persistVendorArchivedApps pipe vendorKey vendorApps)
 
     putStrLn "----------------------------------------"
 
@@ -75,7 +76,7 @@ fetchApps pipe = do
 
 fetchAndPersistApp :: Pipe -> String -> (Text.Text, Integer) -> IO ()
 fetchAndPersistApp pipe totalVendors (vendorKey, currentVendor) = do
-    putStrLn $ ">> Fetching app '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
+    putStrLn $ ">> Fetching app '" ++ Text.unpack vendorKey ++ "'. (" ++ show currentVendor ++ "/" ++ totalVendors ++ ")"
 
     -- Collections to do:
     -- - app-metadata

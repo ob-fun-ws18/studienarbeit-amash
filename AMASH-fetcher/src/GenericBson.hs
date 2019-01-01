@@ -111,7 +111,7 @@ class FromBSON a where
     fromBSON :: Document -> Maybe a
 
     default fromBSON :: (Generic a, GConstructorCount (Rep a), GFromBSON (Rep a)) => Document -> Maybe a
-    fromBSON doc = maybe Nothing (Just . to) (genericFromBSON (constructorCount (undefined :: a)) doc)
+    fromBSON doc = fmap to (genericFromBSON (constructorCount (undefined :: a)) doc)
 
 class GFromBSON f where
     genericFromBSON :: Int -> Document -> Maybe (f a)
