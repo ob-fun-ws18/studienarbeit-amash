@@ -25,18 +25,18 @@ saveNewRankings pipe application rankingCategory fetchedRankings = do
 
     checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction compareWithOldDataFn
 
-    let rankingsAreEqual = fst checkResult
-        maybeObjectId    = snd checkResult :: Maybe ObjectId
+    let areEqual      = fst checkResult
+        maybeObjectId = snd checkResult :: Maybe ObjectId
 
-    if   rankingsAreEqual && isJust maybeObjectId
+    if   areEqual && isJust maybeObjectId
     then updateLastChangedTimestamp pipe collectionName (fromJust maybeObjectId :: ObjectId)
     else putNewRankingsIntoDatabase pipe collectionName fetchedRankings
 
 putNewRankingsIntoDatabase pipe collectionName rankings = do
     currentDateTime <- getCurrentTime
-    let docToPersist = ["fetched" =: currentDateTime
+    let docToPersist = [ "fetched"     =: currentDateTime
                        , "lastChecked" =: currentDateTime
-                       , "rankings" =: rankings]
+                       , "rankings"    =: rankings]
     access pipe master "amash" $ insert_ collectionName docToPersist
     putStrLn "Saved new rankings in the database."
 

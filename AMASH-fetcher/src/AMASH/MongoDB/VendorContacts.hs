@@ -14,30 +14,33 @@ import Data.Maybe
 
 persistVendorContacts :: Pipe -> Text -> [StorableVendorContact] -> IO ()
 persistVendorContacts pipe vendorId fetchedContacts = do
-    let docs               = Prelude.map toBSON fetchedContacts
-        getLastSavedAction = access pipe master "amash" $ getLastSavedVendorContacts vendorId
-        compareWithOldData = compareFetchedAndOldData fetchedContacts "contacts"
+    let fetchedContactsBson = Prelude.map toBSON fetchedContacts
+        getLastSavedAction  = access pipe master "amash" $ getLastSavedVendorContacts vendorId
+        compareWithOldData  = compareFetchedAndOldData fetchedContacts "contacts"
 
     checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction compareWithOldData
 
-    let areEqual            = fst checkResult
-        --maybeUnchangedSince = snd checkResult :: Maybe UTCTime
-        maybeUnchangedSince = Nothing :: Maybe UTCTime
+    let areEqual      = fst checkResult
+        maybeObjectId = snd checkResult :: Maybe ObjectId
 
-    if   areEqual && isJust maybeUnchangedSince
-    then putUnchangedSinceIntoDatabase pipe vendorId maybeUnchangedSince
-    else putNewContactsIntoDatabase pipe vendorId docs
+    if   areEqual && isJust maybeObjectId
+    then updateLastChangedTimestamp pipe (fromJust maybeObjectId :: ObjectId)
+    else putNewContactsIntoDatabase pipe vendorId fetchedContactsBson
 
-putNewContactsIntoDatabase pipe vendorId docs = do
+putNewContactsIntoDatabase pipe vendorId contacts = do
     currentDateTime <- getCurrentTime
-    let selectDocument  = selectVendor vendorId
-        pushNewContacts = pushVendorContacts currentDateTime docs
-    access pipe master "amash" $ modify selectDocument pushNewContacts
+    let docToPersist = [ "fetched"     =: currentDateTime
+                       , "lastChecked" =: currentDateTime
+                       , "vendor"      =: vendorId
+                       , "contacts"    =: contacts]
+    access pipe master "amash" $ insert_ "vendor-contacts" docToPersist
     putStrLn "Saved new contacts in the database."
 
-putUnchangedSinceIntoDatabase pipe vendorId maybeUnchangedSince = do
+updateLastChangedTimestamp pipe objectId = do
     currentDateTime <- getCurrentTime
-    let selectDocument  = selectVendor vendorId
-        pushNewData     = pushUnchangedSinceVendorContacts currentDateTime (fromJust maybeUnchangedSince)
-    access pipe master "amash" $ modify selectDocument pushNewData
-    putStrLn "Persisted 'unchanged since' pointer in the database."
+
+    let selectDocument    = selectByObjectId "vendor-contacts" objectId
+        updateLastChecked = ["$set" =: ["lastChecked" =: currentDateTime]]
+
+    access pipe master "amash" $ modify selectDocument updateLastChecked
+    putStrLn $ "Updated lastChecked of old entry to '" ++ (show currentDateTime) ++ "'."

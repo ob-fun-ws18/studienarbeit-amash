@@ -34,23 +34,23 @@ fetchAndPersistRanking pipe (application, appsListFilter) = do
 
 fetchVendors :: Pipe -> IO ()
 fetchVendors pipe = do
-    -- vendorKeys <- getAllVendorKeys pipe TODO: uncomment
-    let vendorKeys = [] -- TODO: remove
-    let amountOfVendors = show $ length vendorKeys
+    trackedVendorKeys <- getAllTrackedVendorKeys pipe
+    let amountOfVendors = show $ length trackedVendorKeys
     putStrLn $ ">>> Fetching vendors. Found " ++ amountOfVendors ++ " vendor keys in the database."
     putStrLn "----------------------------------------"
-    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip (take 1 vendorKeys) [1..]) -- TODO: remove "take 1" !!!
+    --mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip (take 1 trackedVendorKeys) [1..]) -- TODO: remove "take 1" !!!
+    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip ["111"] [1..])  -- TODO replace with line above
     putStrLn ">>> All vendors fetched."
 
 fetchAndPersistVendor :: Pipe -> String -> (Text.Text, Integer) -> IO ()
 fetchAndPersistVendor pipe totalVendors (vendorKey, currentVendor) = do
     putStrLn $ "Fetching vendor '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
 
-    -- TODO: uncomment
-    --maybeVendorContacts <- fetchVendorContacts vendorKey
-    --when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
+    maybeVendorContacts <- fetchVendorContacts vendorKey
+    when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
 
-    maybeVendorMetaData <- fetchVendorMetaData vendorKey
+    -- TODO: implement / upgrade to new schema
+    --maybeVendorMetaData <- fetchVendorMetaData vendorKey
     --when (isJust maybeVendorMetaData) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorMetaData)
 
     putStrLn "----------------------------------------"

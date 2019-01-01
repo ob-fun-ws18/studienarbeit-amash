@@ -23,20 +23,12 @@ getLastSavedRankings collectionName = aggregate collectionName [
 getLastSavedVendorContacts :: (MonadIO m)
     => Text.Text            -- ^ The vendor id.
     -> Action m [Document]  -- ^ The resulting action.
-getLastSavedVendorContacts vendorId = aggregate "vendors" [
+getLastSavedVendorContacts vendorId = aggregate "vendor-contacts" [
         ["$match"   =: [
-            "key" =: vendorId
+            "vendor" =: vendorId
         ]],
-        ["$unwind"  =: "$contacts"],
-        ["$match" =: [
-            "contacts.unchangedSince" =: ["$exists" =: False]
-        ]],
-        ["$limit"   =: 1],
-        ["$project" =: [
-            "_id"      =: 0,
-            "date"     =: "$contacts.date",
-            "contacts" =: "$contacts.contacts"
-        ]]
+        ["$sort"   =: ["lastChecked" =: -1]],
+        ["$limit"   =: 1]
     ]
 
 -- | Builds an action that fetches the last saved contacts entry for a vendor id.
