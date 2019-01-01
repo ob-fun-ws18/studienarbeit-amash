@@ -3,7 +3,7 @@
 module Main where
 
 import AMASH
-import Control.Monad (when)
+import Control.Monad (unless)
 import System.Environment
 
 main :: IO ()
@@ -11,7 +11,7 @@ main = do
     args <- getArgs
 
     let missingArgsMessage = "Missing arg! Supply at least one of the following args to the program: " ++ show validProgramArgs
-    when (not $ validProgramArgs `elemAtLeastOne` args) (error missingArgsMessage)
+    unless (not $ validProgramArgs `elemAtLeastOne` args) (error missingArgsMessage)
 
     pipe <- openConnection
     authenticated <- authenticate pipe
