@@ -52,3 +52,23 @@ getLastSavedVendorContacts vendorId = aggregate "vendors" [
             "contacts" =: "$contacts.contacts"
         ]]
     ]
+
+-- | Builds an action that fetches the last saved contacts entry for a vendor id.
+getLastSavedVendorMetaData :: (MonadIO m)
+    => Text.Text            -- ^ The vendor id.
+    -> Action m [Document]  -- ^ The resulting action.
+getLastSavedVendorMetaData vendorId = aggregate "vendors" [
+        ["$match"   =: [
+            "key" =: vendorId
+        ]],
+        ["$unwind"  =: "$metadata"],
+        ["$match" =: [
+            "metadata.unchangedSince" =: ["$exists" =: False]
+        ]],
+        ["$limit"   =: 1],
+        ["$project" =: [
+            "_id"      =: 0,
+            "date"     =: "$metadata.date",
+            "metadata" =: "$metadata.metadata"
+        ]]
+    ]

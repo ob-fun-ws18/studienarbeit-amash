@@ -20,7 +20,6 @@ import Data.Maybe
 import Control.Monad (when)
 
 fetchRankings pipe = do
-    runQuickSetup pipe
     putStrLn ">>> Fetching rankings."
     mapM_ (fetchAndPersistRanking pipe) (take 1 rankingAppsAndFilters) -- TODO: remove "take 1" !!!
     putStrLn "----------------------------------------"
@@ -35,7 +34,8 @@ fetchAndPersistRanking pipe (application, appsListFilter) = do
 
 fetchVendors :: Pipe -> IO ()
 fetchVendors pipe = do
-    vendorKeys <- getAllVendorKeys pipe
+    -- vendorKeys <- getAllVendorKeys pipe TODO: uncomment
+    let vendorKeys = [] -- TODO: remove
     let amountOfVendors = show $ length vendorKeys
     putStrLn $ ">>> Fetching vendors. Found " ++ amountOfVendors ++ " vendor keys in the database."
     putStrLn "----------------------------------------"
