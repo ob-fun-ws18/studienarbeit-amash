@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8a96c6aea2a7a03c6e48eee6962187c2ecc602838f39447bdf435218f71b8b4a
+-- hash: 29d1302c811abceb7410aaeb17ecf671ca6fc199c5a6b3594ee9709bb1882d90
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -58,9 +58,10 @@ library
       AMASH.MongoDB.VendorContacts
       AMASH.MongoDB.VendorMetaData
       AMASH.REST
-      AMASH.REST.Apps
+      AMASH.REST.AppKeys
       AMASH.REST.Rankings
       AMASH.REST.URIs
+      AMASH.REST.VendorApps
       AMASH.REST.VendorContacts
       AMASH.REST.VendorMetaData
       AMASH.Util

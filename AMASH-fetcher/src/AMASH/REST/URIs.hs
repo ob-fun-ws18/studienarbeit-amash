@@ -18,7 +18,9 @@ module AMASH.REST.URIs (
         buildRankingURI,
 
         vendor,
-        vendorContacts
+        vendorContacts,
+        vendorAppsPaged,
+        vendorArchivedAppsPaged
     ) where
 
 import AMASH.Constants
@@ -91,7 +93,6 @@ buildRankingURI application appsListFilter page = apps
                                         ++ "&filter=" ++ (showInKebab appsListFilter)
                                         ++ "&" ++ pageParams page
 
-
 -----------------------------------------------------------------------
 
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-vendors-vendorId-get
@@ -101,6 +102,18 @@ vendor vendorId = baseURI ++ "/vendors/" ++ vendorId
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-vendors-vendorId-contacts-get
 vendorContacts :: String -> String
 vendorContacts vendorId = vendor vendorId ++ "/contacts"
+
+vendorApps :: String -> String
+vendorApps vendorId = baseURI ++ "/addons/vendor/" ++ vendorId
+
+vendorAppsPaged :: String -> Integer -> String
+vendorAppsPaged vendorId page = (vendorApps vendorId) ++ "?" ++ (pageParams page)
+
+vendorArchivedApps :: String -> String
+vendorArchivedApps vendorId = baseURI ++ "/addons/archived/vendor/" ++ vendorId
+
+vendorArchivedAppsPaged :: String -> Integer -> String
+vendorArchivedAppsPaged vendorId page = (vendorArchivedApps vendorId) ++ "?" ++ (pageParams page)
 
 -----------------------------------------------------------------------
 

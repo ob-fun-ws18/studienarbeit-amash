@@ -1,4 +1,4 @@
-module AMASH.REST.Apps (fetchAllExistingKeys) where
+module AMASH.REST.AppKeys (fetchAllExistingKeys) where
 
 import qualified AMASH.REST.URIs as URIs
 import qualified AMASH.Data.AppsList as AppsList

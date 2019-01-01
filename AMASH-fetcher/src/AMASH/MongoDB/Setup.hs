@@ -3,7 +3,7 @@
 module AMASH.MongoDB.Setup (runSetup) where
 
 import AMASH.Constants
-import AMASH.REST.Apps
+import AMASH.REST.AppKeys
 import AMASH.MongoDB.Querys
 
 import Database.MongoDB

@@ -54,6 +54,36 @@ fetchAndPersistVendor pipe totalVendors (vendorKey, currentVendor) = do
     maybeVendorContacts <- fetchVendorContacts vendorKey
     when (isJust maybeVendorContacts) (persistVendorContacts pipe vendorKey $ fromJust maybeVendorContacts)
 
+    maybeVendorApps <- fetchVendorApps vendorKey
+    --when (isJust maybeVendorApps) (persistVendorApps pipe vendorKey $ fromJust maybeVendorApps)
+
+    maybeVendorArchivedApps <- fetchVendorApps vendorKey
+    --when (isJust maybeVendorApps) (persistVendorApps pipe vendorKey $ fromJust maybeVendorApps)
+
     putStrLn "----------------------------------------"
 
-fetchApps pipe = putStrLn "Not yet implemented."
+
+fetchApps :: Pipe -> IO ()
+fetchApps pipe = do
+    trackedVendorApps <- getAllTrackedAppKeys pipe
+    let amountOfApps = show $ length trackedVendorApps
+    putStrLn $ ">>> Fetching apps. Found " ++ amountOfApps ++ " app keys in the database."
+    putStrLn "----------------------------------------"
+    --mapM_ (fetchAndPersistApp pipe amountOfApps) (zip trackedVendorKeys [1..])
+    mapM_ (fetchAndPersistApp pipe amountOfApps) (zip ["de.scandio.confluence.plugins.pocketquery"] [1..]) -- TODO remove (only for testing)
+    putStrLn ">>> All apps fetched."
+
+fetchAndPersistApp :: Pipe -> String -> (Text.Text, Integer) -> IO ()
+fetchAndPersistApp pipe totalVendors (vendorKey, currentVendor) = do
+    putStrLn $ ">> Fetching app '" ++ (Text.unpack vendorKey) ++ "'. (" ++ (show currentVendor) ++ "/" ++ totalVendors ++ ")"
+
+    -- Collections to do:
+    -- - app-metadata
+    -- - app-recommendations
+    -- - app-pricing
+    -- - app-metrics
+
+    --maybeVendorMetaData <- fetchVendorMetaData vendorKey
+    --when (isJust maybeVendorMetaData) (persistVendorMetaData pipe vendorKey $ fromJust maybeVendorMetaData)
+
+    putStrLn "----------------------------------------"
