@@ -24,7 +24,7 @@ persistVendorArchivedApps pipe = persistVendorApps' pipe "vendor-archived-apps"
 persistVendorApps' :: Pipe -> Text.Text -> Text.Text -> [Text.Text] -> IO ()
 persistVendorApps' pipe collectionName vendorId fetchedData = do
     let getLastSavedAction   = access pipe master "amash" $ getLastSavedVendorEntry collectionName vendorId
-        compareWithOldDataFn = compareFetchedAndOldData fetchedData "rankings"
+        compareWithOldDataFn = compareFetchedAndOldData fetchedData "apps"
 
     checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction compareWithOldDataFn
 
