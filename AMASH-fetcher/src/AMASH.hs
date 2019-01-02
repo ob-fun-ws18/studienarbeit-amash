@@ -32,7 +32,7 @@ fetchAndPersistRanking pipe (application, appsListFilter) = do
     putStrLn "----------------------------------------"
     result <- getTop100 application appsListFilter
     putStrLn $ "Successfully fetched " ++ show (Prelude.length result) ++ " results."
-    saveNewRankings pipe application appsListFilter result
+    persistRankings pipe application appsListFilter result
 
 
 fetchVendors :: Pipe -> IO ()
@@ -80,14 +80,13 @@ fetchAndPersistApp pipe totalApps (appKey, currentApp) = do
 
     -- Collections to do:
     -- - app-metadata
-    -- - app-recommendations
     -- - app-pricing
 
-    -- TODO: uncomment
+    -- TODO: works! uncomment
     maybeAppMetrics <- fetchAppMetrics appKey
     forM_ maybeAppMetrics (persistAppMetrics pipe appKey)
 
-    --maybeAppPricing <- fetchAppPricing appKey
-    --forM_ maybeAppMetrics (persistAppMetrics pipe appKey)
+    maybeAppRecommendations <- fetchAppRecommendations appKey
+    forM_ maybeAppRecommendations (persistAppRecommendations pipe appKey)
 
     putStrLn "----------------------------------------"

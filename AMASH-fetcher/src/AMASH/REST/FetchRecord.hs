@@ -1,10 +1,16 @@
-module AMASH.REST.FetchRecord (fetchAppMetrics, fetchVendorMetaData, fetchVendorContacts) where
+module AMASH.REST.FetchRecord (
+    fetchAppMetrics,
+    fetchAppRecommendations,
+    fetchVendorMetaData,
+    fetchVendorContacts
+) where
 
 import qualified AMASH.REST.URIs as URIs
 import qualified AMASH.Data.AppMetrics as AppMetrics
 import qualified AMASH.Data.Vendor as Vendor
 import qualified AMASH.Data.Vendor.VendorContacts as VendorContacts
 import qualified AMASH.Data.Vendor.StorableVendorContact as StorableVendorContact
+import qualified AMASH.Data.AppsList as AppsList
 import AMASH.REST.Rankings
 import AMASH.MongoDB
 
@@ -17,6 +23,13 @@ import Network.HTTP.Conduit (simpleHttp)
 
 fetchAppMetrics :: Text -> IO (Maybe AppMetrics.AppMetrics)
 fetchAppMetrics appKey = fetchRecord (URIs.appMetrics $ unpack appKey) "app metrics"
+
+fetchAppRecommendations :: Text -> IO (Maybe [Text])
+fetchAppRecommendations appKey = do
+    maybeRecommendations <- fetchRecord (URIs.appRecommendations $ unpack appKey) "app recommendations" :: IO (Maybe AppsList.AppsListResponse)
+    if isJust maybeRecommendations
+    then return . Just . AppsList.appsResponseToAppKeys $ fromJust maybeRecommendations
+    else return Nothing
 
 fetchVendorMetaData :: Text -> IO (Maybe Vendor.Vendor)
 fetchVendorMetaData vendorId = fetchRecord (URIs.vendor $ unpack vendorId) "vendor metadata"

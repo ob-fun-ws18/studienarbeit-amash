@@ -61,7 +61,7 @@ appPricing' addonKey pricingType = app addonKey ++ "/pricing/" ++ pricingType ++
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-recommendations-get
 -- | The other apps that appear in the "recommendations" panel below your app.
 appRecommendations :: String  -> String 
-appRecommendations addonKey = app addonKey ++ "/recommendations"
+appRecommendations addonKey = app addonKey ++ "/recommendations?limit=25"
 
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-reviews-get
 appReviews :: String  -> String 

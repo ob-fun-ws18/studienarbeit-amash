@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ExtendedDefaultRules #-}
 
-module AMASH.MongoDB.Rankings (persistRankings) where
+module AMASH.MongoDB.AppRecommendations (persistAppRecommendations) where
 
 import qualified Data.Text as Text
 import Database.MongoDB
@@ -18,10 +18,10 @@ import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Setup
 import AMASH.MongoDB.Helpers
 
-persistRankings pipe application rankingCategory fetchedRankings = do
-    let collectionName       = Text.pack $ rankingsCollectionName application rankingCategory
-        getLastSavedAction   = access pipe master "amash" $ getLastSavedRankings collectionName
-        compareWithOldDataFn = compareFetchedAndOldData fetchedRankings "rankings"
+persistAppRecommendations pipe appKey fetchedRecommendations = do
+    let collectionName       = "app-recommendations"
+        getLastSavedAction   = access pipe master "amash" $ getLastSavedAppEntry "recommendations" appKey
+        compareWithOldDataFn = compareFetchedAndOldData fetchedRecommendations "recommendations"
 
     checkResult <- getLastSavedDataAndCompare pipe getLastSavedAction compareWithOldDataFn
 
@@ -30,13 +30,14 @@ persistRankings pipe application rankingCategory fetchedRankings = do
 
     if   areEqual && isJust maybeObjectId
     then updateLastChangedTimestamp pipe collectionName (fromJust maybeObjectId :: ObjectId)
-    else putNewDataIntoDatabase pipe collectionName fetchedRankings
+    else putNewDataIntoDatabase pipe collectionName fetchedRecommendations appKey
 
-putNewDataIntoDatabase pipe collectionName rankings = do
+putNewDataIntoDatabase pipe collectionName fetchedData appKey = do
     currentDateTime <- getCurrentTime
-    let docToPersist = [ "fetched"     =: currentDateTime
-                       , "lastChecked" =: currentDateTime
-                       , "rankings"    =: rankings]
+    let docToPersist = [ "fetched"         =: currentDateTime
+                       , "lastChecked"     =: currentDateTime
+                       , "app"             =: appKey
+                       , "recommendations" =: fetchedData]
     access pipe master "amash" $ insert_ collectionName docToPersist
     putStrLn "Saved new data in the database."
 

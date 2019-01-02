@@ -6,7 +6,8 @@ module AMASH.MongoDB (
     module AMASH.MongoDB.VendorContacts,
     module AMASH.MongoDB.VendorMetaData,
     module AMASH.MongoDB.VendorApps,
-    module AMASH.MongoDB.App
+    module AMASH.MongoDB.App,
+    module AMASH.MongoDB.AppRecommendations
 ) where
 
 import AMASH.MongoDB.Connection
@@ -17,3 +18,4 @@ import AMASH.MongoDB.VendorContacts
 import AMASH.MongoDB.VendorMetaData
 import AMASH.MongoDB.VendorApps
 import AMASH.MongoDB.App
+import AMASH.MongoDB.AppRecommendations
