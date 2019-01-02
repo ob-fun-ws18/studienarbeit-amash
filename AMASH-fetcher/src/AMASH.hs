@@ -70,21 +70,20 @@ fetchApps pipe = do
     let amountOfApps = show $ length trackedVendorApps
     putStrLn $ ">>> Fetching apps. Found " ++ amountOfApps ++ " app keys in the database."
     putStrLn "----------------------------------------"
-    --mapM_ (fetchAndPersistApp pipe amountOfApps) (zip trackedVendorKeys [1..])
+    --mapM_ (fetchAndPersistApp pipe amountOfApps) (zip trackedVendorApps [1..])
     mapM_ (fetchAndPersistApp pipe amountOfApps) (zip ["de.scandio.confluence.plugins.pocketquery"] [1..]) -- TODO remove (only for testing)
     putStrLn ">>> All apps fetched."
 
 fetchAndPersistApp :: Pipe -> String -> (Text.Text, Integer) -> IO ()
-fetchAndPersistApp pipe totalVendors (vendorKey, currentVendor) = do
-    putStrLn $ ">> Fetching app '" ++ Text.unpack vendorKey ++ "'. (" ++ show currentVendor ++ "/" ++ totalVendors ++ ")"
+fetchAndPersistApp pipe totalApps (appKey, currentApp) = do
+    putStrLn $ ">> Fetching app '" ++ Text.unpack appKey ++ "'. (" ++ show currentApp ++ "/" ++ totalApps ++ ")"
 
     -- Collections to do:
     -- - app-metadata
     -- - app-recommendations
     -- - app-pricing
-    -- - app-metrics
 
-    --maybeVendorMetaData <- fetchVendorMetaData vendorKey
-    --when (isJust maybeVendorMetaData) (persistVendorMetaData pipe vendorKey $ fromJust maybeVendorMetaData)
+    maybeAppMetrics <- fetchAppMetrics appKey
+    forM_ maybeAppMetrics (persistAppMetrics pipe appKey)
 
     putStrLn "----------------------------------------"

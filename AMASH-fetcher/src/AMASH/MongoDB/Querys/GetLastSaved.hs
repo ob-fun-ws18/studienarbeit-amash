@@ -40,3 +40,15 @@ getLastSavedVendorContacts = getLastSavedVendorEntry "vendor-contacts"
 -- | Builds an action that fetches the last saved vendor metadata entry for a vendor id.
 getLastSavedVendorMetaData :: (MonadIO m) => Text.Text -> Action m [Document]
 getLastSavedVendorMetaData = getLastSavedVendorEntry "vendor-metadata"
+
+getLastSavedAppEntry :: (MonadIO m)
+    => Text.Text            -- ^ The vendor id.
+    -> Text.Text            -- ^ The collection name.
+    -> Action m [Document]  -- ^ The resulting action.
+getLastSavedAppEntry collectionName appKey = aggregate (Text.pack $ "app-" ++ Text.unpack collectionName) [
+        ["$match"   =: [
+            "app" =: appKey
+        ]],
+        ["$sort"   =: ["lastChecked" =: -1]],
+        ["$limit"   =: 1]
+    ]

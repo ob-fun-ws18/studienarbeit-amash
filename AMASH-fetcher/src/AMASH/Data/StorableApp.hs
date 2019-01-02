@@ -9,7 +9,6 @@ import Data.Time.Clock
 
 import qualified AMASH.Data.App as App
 import qualified AMASH.Data.App.VendorLinks as VendorLinks
-import qualified AMASH.Data.App.AddonDistributionSummary as AddonDistributionSummary
 import qualified AMASH.Data.App.AppEmbedded as AppEmbedded
 import qualified AMASH.Data.App.AddonCategorySummary as AddonCategorySummary
 import qualified AMASH.Data.App.StorableImageAssetSummary as StorableImageAssetSummary
@@ -25,7 +24,6 @@ data StorableApp = StorableApp { name :: Text
                , categories :: [Text]
                , logo :: Maybe StorableImageAssetSummary.StorableImageAssetSummary
                , titleLogo :: Maybe StorableImageAssetSummary.StorableImageAssetSummary
-               , distribution :: Maybe AddonDistributionSummary.AddonDistributionSummary
                } deriving (Show, Eq, Generic)
 
 instance FromJSON StorableApp
@@ -39,7 +37,6 @@ createStorableApp app = StorableApp {
     vendorLinks     = App.vendorLinks app,
     lastModified    = App.lastModified app,
 
-    distribution    = AppEmbedded.distribution embeddedApp,
     categories      = unpackCategories $ AppEmbedded.categories embeddedApp,
 
     logo            = createImageLinks $ AppEmbedded.logo embeddedApp,

@@ -4,11 +4,7 @@ module AMASH.REST.URIs (
         baseURI,
 
         app,
-        appVersions,
-        appVersionLatest,
-        appVersionByBuildNumber,
-        appVersionByVersion,
-        appDistribution,
+        appMetrics,
         appPricing,
         appRecommendations,
         appReviews,
@@ -39,6 +35,7 @@ app :: String  -> String
 app ""       = error "Empty addon key not allowed for URI buildung!"
 app addonKey = baseURI ++ "/addons/" ++ addonKey
 
+{-
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-get
 appVersions :: String  -> String 
 appVersions addonKey = app addonKey ++ "/versions"
@@ -46,20 +43,11 @@ appVersions addonKey = app addonKey ++ "/versions"
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-latest-get
 appVersionLatest :: String  -> String 
 appVersionLatest addonKey = appVersions addonKey ++ "/latest"
-
--- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-build-pluginBuildNumber-get
--- | Build Number die man aus anderen calls kriegt, also z.B. "3005000020"
-appVersionByBuildNumber :: String  -> String  -> String 
-appVersionByBuildNumber addonKey buildNumber = appVersions addonKey ++ "/build/" ++ buildNumber
-
--- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-name-name-get
--- | Tatsächliche Version also z.B. "3.6.1"
-appVersionByVersion :: String  -> String  -> String 
-appVersionByVersion addonKey version = appVersions addonKey ++ "/name/" ++ version
+-}
 
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-distribution-get
-appDistribution :: String  -> String 
-appDistribution addonKey = app addonKey ++ "/distribution"
+appMetrics :: String  -> String
+appMetrics addonKey = app addonKey ++ "/distribution"
 
 -- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-pricing-cloudOrServer-liveOrPending-get
 appPricing, appPricing' :: String  -> String  -> String 
