@@ -1,6 +1,7 @@
 module AMASH.REST.FetchRecord (
     fetchAppMetrics,
     fetchAppRecommendations,
+    fetchAppMetadata,
     fetchVendorMetaData,
     fetchVendorContacts
 ) where
@@ -11,6 +12,8 @@ import qualified AMASH.Data.Vendor as Vendor
 import qualified AMASH.Data.Vendor.VendorContacts as VendorContacts
 import qualified AMASH.Data.Vendor.StorableVendorContact as StorableVendorContact
 import qualified AMASH.Data.AppsList as AppsList
+import qualified AMASH.Data.App as App
+import qualified AMASH.Data.StorableApp as StorableApp
 import AMASH.REST.Rankings
 import AMASH.MongoDB
 
@@ -28,6 +31,11 @@ fetchAppRecommendations :: Text -> IO (Maybe [Text])
 fetchAppRecommendations appKey = do
     maybeRecommendations <- fetchRecord (URIs.appRecommendations $ unpack appKey) "app recommendations" :: IO (Maybe AppsList.AppsListResponse)
     return . fmap AppsList.appsResponseToAppKeys $ maybeRecommendations
+
+fetchAppMetadata :: Text -> IO (Maybe StorableApp.StorableApp)
+fetchAppMetadata appKey = do
+    maybeMetadata <- fetchRecord (URIs.app $ unpack appKey) "app metadata" :: IO (Maybe App.App)
+    return . fmap StorableApp.createStorableApp $ maybeMetadata
 
 fetchVendorMetaData :: Text -> IO (Maybe Vendor.Vendor)
 fetchVendorMetaData vendorId = fetchRecord (URIs.vendor $ unpack vendorId) "vendor metadata"

@@ -5,6 +5,7 @@ module AMASH.Data.App.StorableImageAssetSummary where
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import GenericBson
 
 import qualified AMASH.Data.App.ImageAssetSummary as ImageAssetSummary
 
@@ -15,6 +16,8 @@ data StorableImageAssetSummary = StorableImageAssetSummary { self :: Text
 
 instance FromJSON StorableImageAssetSummary
 instance ToJSON StorableImageAssetSummary
+instance FromBSON StorableImageAssetSummary
+instance ToBSON StorableImageAssetSummary
 
 createStorableImageAssetSummary :: Maybe ImageAssetSummary.ImageAssetSummary -> Maybe StorableImageAssetSummary
 createStorableImageAssetSummary Nothing = Nothing

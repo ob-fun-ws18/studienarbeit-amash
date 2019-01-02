@@ -79,10 +79,12 @@ fetchAndPersistApp pipe totalApps (appKey, currentApp) = do
     putStrLn $ ">> Fetching app '" ++ Text.unpack appKey ++ "'. (" ++ show currentApp ++ "/" ++ totalApps ++ ")"
 
     -- Collections to do:
-    -- - app-metadata
     -- - app-pricing
+    -- - app-versions
 
-    -- TODO: works! uncomment
+    maybeAppMetadata <- fetchAppMetadata appKey
+    forM_ maybeAppMetadata (persistAppMetadata pipe appKey)
+
     maybeAppMetrics <- fetchAppMetrics appKey
     forM_ maybeAppMetrics (persistAppMetrics pipe appKey)
 

@@ -6,14 +6,13 @@ import Data.Text
 import Data.Aeson
 import GHC.Generics
 import Data.Time.Clock
+import GenericBson
 
 import qualified AMASH.Data.App as App
 import qualified AMASH.Data.App.VendorLinks as VendorLinks
 import qualified AMASH.Data.App.AppEmbedded as AppEmbedded
 import qualified AMASH.Data.App.AddonCategorySummary as AddonCategorySummary
 import qualified AMASH.Data.App.StorableImageAssetSummary as StorableImageAssetSummary
-
--- TODO: Versions, VersionLatest, AppPricing, AppRecommendations, AppReviews
 
 data StorableApp = StorableApp { name :: Text
                , summary :: Text
@@ -28,6 +27,8 @@ data StorableApp = StorableApp { name :: Text
 
 instance FromJSON StorableApp
 instance ToJSON StorableApp
+instance FromBSON StorableApp
+instance ToBSON StorableApp
 
 createStorableApp :: App.App -> StorableApp
 createStorableApp app = StorableApp {

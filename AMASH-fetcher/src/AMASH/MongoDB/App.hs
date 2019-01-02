@@ -1,11 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module AMASH.MongoDB.App (persistAppMetrics) where
+module AMASH.MongoDB.App (persistAppMetrics, persistAppMetadata) where
 
 import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Helpers
 import qualified AMASH.Data.AppMetrics as AppMetrics
 import qualified AMASH.Data.Vendor as Vendor
+import qualified AMASH.Data.StorableApp as StorableApp
 
 import GenericBson
 import Database.MongoDB
@@ -16,8 +17,8 @@ import Data.Maybe
 persistAppMetrics :: Pipe -> Text -> AppMetrics.AppMetrics -> IO ()
 persistAppMetrics = persistAppData "metrics"
 
---persistAppPricing :: Pipe -> Text -> Vendor.Vendor -> IO ()
---persistAppPricing = persistAppData "pricing"
+persistAppMetadata :: Pipe -> Text -> StorableApp.StorableApp -> IO ()
+persistAppMetadata = persistAppData "metadata"
 
 
 persistAppData fetchedName pipe appKey fetchedData = do
