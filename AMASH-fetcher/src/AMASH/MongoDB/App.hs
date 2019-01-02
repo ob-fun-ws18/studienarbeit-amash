@@ -4,7 +4,8 @@ module AMASH.MongoDB.App (persistAppMetrics) where
 
 import AMASH.MongoDB.Querys
 import AMASH.MongoDB.Helpers
-import AMASH.Data.AppMetrics
+import qualified AMASH.Data.AppMetrics as AppMetrics
+import qualified AMASH.Data.Vendor as Vendor
 
 import GenericBson
 import Database.MongoDB
@@ -12,11 +13,14 @@ import Data.Text
 import Data.Time.Clock
 import Data.Maybe
 
-persistAppMetrics :: Pipe -> Text -> AppMetrics -> IO ()
-persistAppMetrics pipe appKey fetchedData = persistAppData pipe appKey fetchedData "metrics"
+persistAppMetrics :: Pipe -> Text -> AppMetrics.AppMetrics -> IO ()
+persistAppMetrics = persistAppData "metrics"
+
+--persistAppPricing :: Pipe -> Text -> Vendor.Vendor -> IO ()
+--persistAppPricing = persistAppData "pricing"
 
 
-persistAppData pipe appKey fetchedData fetchedName = do
+persistAppData fetchedName pipe appKey fetchedData = do
     let fetchedBson         = toBSON fetchedData
         getLastSavedAction  = access pipe master "amash" $ getLastSavedAppEntry fetchedName appKey
         compareWithOldData  = compareFetchedAndOldData fetchedData fetchedName

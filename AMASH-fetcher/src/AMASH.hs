@@ -41,8 +41,8 @@ fetchVendors pipe = do
     let amountOfVendors = show $ length trackedVendorKeys
     putStrLn $ ">>> Fetching vendors. Found " ++ amountOfVendors ++ " vendor keys in the database."
     putStrLn "----------------------------------------"
-    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip trackedVendorKeys [1..])
-    --mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip ["111"] [1..]) -- TODO remove (only for testing)
+    --mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip trackedVendorKeys [1..])
+    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip ["111"] [1..]) -- TODO remove (only for testing)
     putStrLn ">>> All vendors fetched."
 
 fetchAndPersistVendor :: Pipe -> String -> (Text.Text, Integer) -> IO ()
@@ -83,7 +83,11 @@ fetchAndPersistApp pipe totalApps (appKey, currentApp) = do
     -- - app-recommendations
     -- - app-pricing
 
+    -- TODO: uncomment
     maybeAppMetrics <- fetchAppMetrics appKey
     forM_ maybeAppMetrics (persistAppMetrics pipe appKey)
+
+    --maybeAppPricing <- fetchAppPricing appKey
+    --forM_ maybeAppMetrics (persistAppMetrics pipe appKey)
 
     putStrLn "----------------------------------------"
