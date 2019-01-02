@@ -27,9 +27,7 @@ fetchAppMetrics appKey = fetchRecord (URIs.appMetrics $ unpack appKey) "app metr
 fetchAppRecommendations :: Text -> IO (Maybe [Text])
 fetchAppRecommendations appKey = do
     maybeRecommendations <- fetchRecord (URIs.appRecommendations $ unpack appKey) "app recommendations" :: IO (Maybe AppsList.AppsListResponse)
-    if isJust maybeRecommendations
-    then return . Just . AppsList.appsResponseToAppKeys $ fromJust maybeRecommendations
-    else return Nothing
+    return . fmap AppsList.appsResponseToAppKeys $ maybeRecommendations
 
 fetchVendorMetaData :: Text -> IO (Maybe Vendor.Vendor)
 fetchVendorMetaData vendorId = fetchRecord (URIs.vendor $ unpack vendorId) "vendor metadata"
@@ -37,13 +35,12 @@ fetchVendorMetaData vendorId = fetchRecord (URIs.vendor $ unpack vendorId) "vend
 fetchVendorContacts :: Text -> IO (Maybe [StorableVendorContact.StorableVendorContact])
 fetchVendorContacts vendorId = do
     maybeContacts <- fetchRecord (URIs.vendorContacts $ unpack vendorId) "vendor contacts" :: IO (Maybe VendorContacts.VendorContacts)
-    if isJust maybeContacts
-    then return . Just . StorableVendorContact.vendorContactsToStorable $ fromJust maybeContacts
-    else return Nothing
+    return . fmap StorableVendorContact.vendorContactsToStorable $ maybeContacts
+
 
 fetchRecord uri name = do
     let getJSON = simpleHttp uri
-    e <- (eitherDecode <$> getJSON)
+    e <- eitherDecode <$> getJSON
 
     case e of
         Left err -> do
