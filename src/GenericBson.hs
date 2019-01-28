@@ -7,7 +7,6 @@ Package was incompatible/unmaintained with so I fixed the problems and just kept
 {-# LANGUAGE DefaultSignatures      #-}
 {-# LANGUAGE TypeOperators          #-}
 {-# LANGUAGE FlexibleContexts       #-}
-{-# LANGUAGE TypeSynonymInstances   #-}
 {-# LANGUAGE FlexibleInstances      #-}
 {-# LANGUAGE UndecidableInstances   #-}
 {-# LANGUAGE DeriveDataTypeable     #-}
