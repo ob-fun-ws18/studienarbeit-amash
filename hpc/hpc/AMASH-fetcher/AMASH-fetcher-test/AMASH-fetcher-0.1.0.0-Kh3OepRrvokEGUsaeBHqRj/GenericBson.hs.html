@@ -1,0 +1,193 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+span.lineno { color: white; background: #aaaaaa; border-right: solid white 12px }
+span.nottickedoff { background: yellow}
+span.istickedoff { background: white }
+span.tickonlyfalse { margin: -1px; border: 1px solid #f20913; background: #f20913 }
+span.tickonlytrue  { margin: -1px; border: 1px solid #60de51; background: #60de51 }
+span.funcount { font-size: small; color: orange; z-index: 2; position: absolute; right: 20 }
+span.decl { font-weight: bold }
+span.spaces    { background: white }
+</style>
+</head>
+<body>
+<pre>
+<span class="decl"><span class="nottickedoff">never executed</span> <span class="tickonlytrue">always true</span> <span class="tickonlyfalse">always false</span></span>
+</pre>
+<pre>
+<span class="lineno">    1 </span>{-# LANGUAGE DeriveGeneric          #-}
+<span class="lineno">    2 </span>{-# LANGUAGE DefaultSignatures      #-}
+<span class="lineno">    3 </span>{-# LANGUAGE TypeOperators          #-}
+<span class="lineno">    4 </span>{-# LANGUAGE FlexibleContexts       #-}
+<span class="lineno">    5 </span>{-# LANGUAGE FlexibleInstances      #-}
+<span class="lineno">    6 </span>{-# LANGUAGE UndecidableInstances   #-}
+<span class="lineno">    7 </span>{-# LANGUAGE DeriveDataTypeable     #-}
+<span class="lineno">    8 </span>{-# LANGUAGE MultiParamTypeClasses  #-}
+<span class="lineno">    9 </span>{-# LANGUAGE ScopedTypeVariables    #-}
+<span class="lineno">   10 </span>{-# LANGUAGE OverlappingInstances   #-}
+<span class="lineno">   11 </span>
+<span class="lineno">   12 </span>-- | Original: http://hackage.haskell.org/package/bson-generic-0.0.8.1/docs/src/Data-Bson-Generic.html - Package was incompatible/unmaintained with so I fixed the problems and just kept the source code here.
+<span class="lineno">   13 </span>module GenericBson (
+<span class="lineno">   14 </span>    ToBSON(..),
+<span class="lineno">   15 </span>    FromBSON(..),
+<span class="lineno">   16 </span>    ObjectKey(..),
+<span class="lineno">   17 </span>    keyLabel,
+<span class="lineno">   18 </span>    constructorLabel
+<span class="lineno">   19 </span>) where
+<span class="lineno">   20 </span>
+<span class="lineno">   21 </span>------------------------------------------------------------------------------
+<span class="lineno">   22 </span>import           GHC.Generics
+<span class="lineno">   23 </span>------------------------------------------------------------------------------
+<span class="lineno">   24 </span>import           Control.Applicative
+<span class="lineno">   25 </span>import           Control.Monad
+<span class="lineno">   26 </span>------------------------------------------------------------------------------
+<span class="lineno">   27 </span>import qualified Data.Bson     as BSON (lookup)
+<span class="lineno">   28 </span>import           Data.Bson
+<span class="lineno">   29 </span>import qualified Data.Text     as TS   (pack)
+<span class="lineno">   30 </span>import           Data.Typeable
+<span class="lineno">   31 </span>------------------------------------------------------------------------------
+<span class="lineno">   32 </span>
+<span class="lineno">   33 </span>keyLabel :: Label
+<span class="lineno">   34 </span><span class="decl"><span class="nottickedoff">keyLabel = TS.pack &quot;_id&quot;</span></span>
+<span class="lineno">   35 </span>
+<span class="lineno">   36 </span>constructorLabel :: Label
+<span class="lineno">   37 </span><span class="decl"><span class="nottickedoff">constructorLabel = TS.pack &quot;_co&quot;</span></span>
+<span class="lineno">   38 </span>
+<span class="lineno">   39 </span>------------------------------------------------------------------------------
+<span class="lineno">   40 </span>
+<span class="lineno">   41 </span>newtype ObjectKey = ObjectKey { <span class="nottickedoff"><span class="decl"><span class="nottickedoff">unObjectKey</span></span></span> :: Maybe ObjectId } deriving (Generic, Typeable, <span class="decl"><span class="nottickedoff">Show</span></span>, <span class="decl"><span class="nottickedoff"><span class="decl"><span class="nottickedoff">Eq</span></span></span></span>)
+<span class="lineno">   42 </span>instance FromBSON ObjectKey
+<span class="lineno">   43 </span>instance ToBSON ObjectKey
+<span class="lineno">   44 </span>
+<span class="lineno">   45 </span>------------------------------------------------------------------------------
+<span class="lineno">   46 </span>
+<span class="lineno">   47 </span>instance (FromBSON a, ToBSON a, Typeable a, Show a, Eq a) =&gt; Val a where
+<span class="lineno">   48 </span>    <span class="decl"><span class="nottickedoff">val         x = Doc $ toBSON x</span></span>
+<span class="lineno">   49 </span>    <span class="decl"><span class="nottickedoff">cast' (Doc x) = fromBSON x</span>
+<span class="lineno">   50 </span><span class="spaces">    </span><span class="nottickedoff">cast' _       = Nothing</span></span>
+<span class="lineno">   51 </span>
+<span class="lineno">   52 </span>------------------------------------------------------------------------------
+<span class="lineno">   53 </span>-- TO BSON
+<span class="lineno">   54 </span>
+<span class="lineno">   55 </span>class ToBSON a where
+<span class="lineno">   56 </span>    toBSON :: a -&gt; Document
+<span class="lineno">   57 </span>
+<span class="lineno">   58 </span>    default toBSON :: (Generic a, GConstructorCount (Rep a), GToBSON (Rep a)) =&gt; a -&gt; Document
+<span class="lineno">   59 </span>    <span class="decl"><span class="nottickedoff">toBSON a = genericToBSON (constructorCount a) (from a)</span></span>
+<span class="lineno">   60 </span>
+<span class="lineno">   61 </span>class GToBSON f where
+<span class="lineno">   62 </span>    genericToBSON :: Int -&gt; f a -&gt; Document
+<span class="lineno">   63 </span>
+<span class="lineno">   64 </span>-- | Unit type -&gt; Empty document
+<span class="lineno">   65 </span>instance GToBSON U1 where
+<span class="lineno">   66 </span>    <span class="decl"><span class="nottickedoff">genericToBSON _ U1 = []</span></span>
+<span class="lineno">   67 </span>
+<span class="lineno">   68 </span>-- | Sum of types
+<span class="lineno">   69 </span>instance (GToBSON a, GToBSON b) =&gt; GToBSON (a :*: b) where
+<span class="lineno">   70 </span>    <span class="decl"><span class="nottickedoff">genericToBSON n (x :*: y) = genericToBSON n x ++ genericToBSON n y</span></span>
+<span class="lineno">   71 </span>
+<span class="lineno">   72 </span>-- | Product of types
+<span class="lineno">   73 </span>instance (GToBSON a, GToBSON b) =&gt; GToBSON (a :+: b) where
+<span class="lineno">   74 </span>    <span class="decl"><span class="nottickedoff">genericToBSON n (L1 x) = genericToBSON n x</span>
+<span class="lineno">   75 </span><span class="spaces">    </span><span class="nottickedoff">genericToBSON n (R1 x) = genericToBSON n x</span></span>
+<span class="lineno">   76 </span>
+<span class="lineno">   77 </span>-- | Datatype information tag
+<span class="lineno">   78 </span>instance (GToBSON a) =&gt; GToBSON (D1 c a) where
+<span class="lineno">   79 </span>    <span class="decl"><span class="nottickedoff">genericToBSON n (M1 x) = genericToBSON n x</span></span>
+<span class="lineno">   80 </span>
+<span class="lineno">   81 </span>-- | Constructor tag
+<span class="lineno">   82 </span>instance (GToBSON a, Constructor c) =&gt; GToBSON (C1 c a) where
+<span class="lineno">   83 </span>    <span class="decl"><span class="nottickedoff">genericToBSON 0 (M1 x) = genericToBSON 0 x</span>
+<span class="lineno">   84 </span><span class="spaces">    </span><span class="nottickedoff">genericToBSON 1 (M1 x) = genericToBSON 1 x</span>
+<span class="lineno">   85 </span><span class="spaces">    </span><span class="nottickedoff">genericToBSON n c@(M1 x) = genericToBSON n x ++ [ constructorLabel =: conName c ]</span></span>
+<span class="lineno">   86 </span>
+<span class="lineno">   87 </span>-- | Selector tag
+<span class="lineno">   88 </span>instance (Val a, Selector s) =&gt; GToBSON (S1 s (K1 i a)) where
+<span class="lineno">   89 </span>    <span class="decl"><span class="nottickedoff">genericToBSON _ s@(M1 (K1 x)) = [TS.pack (selName s) =: x]</span></span>
+<span class="lineno">   90 </span>
+<span class="lineno">   91 </span>-- | ObjectKey special treatment
+<span class="lineno">   92 </span>instance (Selector s) =&gt; GToBSON (S1 s (K1 i ObjectKey)) where
+<span class="lineno">   93 </span>    <span class="decl"><span class="nottickedoff">genericToBSON _ (M1 (K1 (ObjectKey (Just key)))) = [ keyLabel =: key ]</span>
+<span class="lineno">   94 </span><span class="spaces">    </span><span class="nottickedoff">genericToBSON                              _ _ = []</span></span>
+<span class="lineno">   95 </span>
+<span class="lineno">   96 </span>-- | Constants
+<span class="lineno">   97 </span>instance (ToBSON a) =&gt; GToBSON (K1 i a) where
+<span class="lineno">   98 </span>    <span class="decl"><span class="nottickedoff">genericToBSON _ (K1 x) = toBSON x</span></span>
+<span class="lineno">   99 </span>
+<span class="lineno">  100 </span>------------------------------------------------------------------------------
+<span class="lineno">  101 </span>
+<span class="lineno">  102 </span>------------------------------------------------------------------------------
+<span class="lineno">  103 </span>-- FROM BSON
+<span class="lineno">  104 </span>
+<span class="lineno">  105 </span>class FromBSON a where
+<span class="lineno">  106 </span>    fromBSON :: Document -&gt; Maybe a
+<span class="lineno">  107 </span>
+<span class="lineno">  108 </span>    default fromBSON :: (Generic a, GConstructorCount (Rep a), GFromBSON (Rep a)) =&gt; Document -&gt; Maybe a
+<span class="lineno">  109 </span>    <span class="decl"><span class="nottickedoff">fromBSON doc = fmap to (genericFromBSON (constructorCount (undefined :: a)) doc)</span></span>
+<span class="lineno">  110 </span>
+<span class="lineno">  111 </span>class GFromBSON f where
+<span class="lineno">  112 </span>    genericFromBSON :: Int -&gt; Document -&gt; Maybe (f a)
+<span class="lineno">  113 </span>
+<span class="lineno">  114 </span>instance GFromBSON U1 where
+<span class="lineno">  115 </span>    <span class="decl"><span class="nottickedoff">genericFromBSON _ _ = Just U1</span></span>
+<span class="lineno">  116 </span>
+<span class="lineno">  117 </span>instance (GFromBSON a, GFromBSON b) =&gt; GFromBSON (a :*: b) where
+<span class="lineno">  118 </span>    <span class="decl"><span class="nottickedoff">genericFromBSON n doc = do</span>
+<span class="lineno">  119 </span><span class="spaces">        </span><span class="nottickedoff">x &lt;- genericFromBSON n doc</span>
+<span class="lineno">  120 </span><span class="spaces">        </span><span class="nottickedoff">y &lt;- genericFromBSON n doc</span>
+<span class="lineno">  121 </span><span class="spaces">        </span><span class="nottickedoff">return $ x :*: y</span></span>
+<span class="lineno">  122 </span>
+<span class="lineno">  123 </span>instance (GFromBSON a, GFromBSON b) =&gt; GFromBSON (a :+: b) where
+<span class="lineno">  124 </span>    <span class="decl"><span class="nottickedoff">genericFromBSON n doc = left `mplus` right</span>
+<span class="lineno">  125 </span><span class="spaces">        </span><span class="nottickedoff">where</span>
+<span class="lineno">  126 </span><span class="spaces">          </span><span class="nottickedoff">left  = L1 &lt;$&gt; genericFromBSON n doc</span>
+<span class="lineno">  127 </span><span class="spaces">          </span><span class="nottickedoff">right = R1 &lt;$&gt; genericFromBSON n doc</span></span>
+<span class="lineno">  128 </span>
+<span class="lineno">  129 </span>instance (GFromBSON a, Constructor c) =&gt; GFromBSON (C1 c a) where
+<span class="lineno">  130 </span>    <span class="decl"><span class="nottickedoff">genericFromBSON 0 doc = M1 &lt;$&gt; genericFromBSON 0 doc</span>
+<span class="lineno">  131 </span><span class="spaces">    </span><span class="nottickedoff">genericFromBSON 1 doc = M1 &lt;$&gt; genericFromBSON 0 doc</span>
+<span class="lineno">  132 </span><span class="spaces">    </span><span class="nottickedoff">genericFromBSON n doc = do</span>
+<span class="lineno">  133 </span><span class="spaces">        </span><span class="nottickedoff">cname &lt;- BSON.lookup constructorLabel doc</span>
+<span class="lineno">  134 </span><span class="spaces">        </span><span class="nottickedoff">if cname == conName (undefined :: M1 C c a r)</span>
+<span class="lineno">  135 </span><span class="spaces">           </span><span class="nottickedoff">then M1 &lt;$&gt; genericFromBSON n doc</span>
+<span class="lineno">  136 </span><span class="spaces">           </span><span class="nottickedoff">else Nothing</span></span>
+<span class="lineno">  137 </span>
+<span class="lineno">  138 </span>instance (GFromBSON a) =&gt; GFromBSON (M1 D c a) where
+<span class="lineno">  139 </span>    <span class="decl"><span class="nottickedoff">genericFromBSON n doc = M1 &lt;$&gt; genericFromBSON n doc</span></span>
+<span class="lineno">  140 </span>
+<span class="lineno">  141 </span>instance (Val a, Selector s) =&gt; GFromBSON (S1 s (K1 i a)) where
+<span class="lineno">  142 </span>    <span class="decl"><span class="nottickedoff">genericFromBSON _ doc = M1 . K1 &lt;$&gt; BSON.lookup sname doc</span>
+<span class="lineno">  143 </span><span class="spaces">        </span><span class="nottickedoff">where</span>
+<span class="lineno">  144 </span><span class="spaces">          </span><span class="nottickedoff">sname = TS.pack . selName $ (undefined :: S1 s (K1 i a) r)</span></span>
+<span class="lineno">  145 </span>
+<span class="lineno">  146 </span>-- | ObjectKey special treatment
+<span class="lineno">  147 </span>instance (Selector s) =&gt; GFromBSON (S1 s (K1 i ObjectKey)) where
+<span class="lineno">  148 </span>    <span class="decl"><span class="nottickedoff">genericFromBSON _ doc = Just . M1 . K1 $ ObjectKey (BSON.lookup keyLabel doc)</span></span>
+<span class="lineno">  149 </span>
+<span class="lineno">  150 </span>------------------------------------------------------------------------------
+<span class="lineno">  151 </span>-- CONVENIENCE
+<span class="lineno">  152 </span>
+<span class="lineno">  153 </span>class GConstructorCount f where
+<span class="lineno">  154 </span>    gconstructorCount :: f a -&gt; Int
+<span class="lineno">  155 </span>
+<span class="lineno">  156 </span>instance GConstructorCount V1 where
+<span class="lineno">  157 </span>    <span class="decl"><span class="nottickedoff">gconstructorCount _ = 0</span></span>
+<span class="lineno">  158 </span>
+<span class="lineno">  159 </span>instance (GConstructorCount a) =&gt; GConstructorCount (D1 d a) where
+<span class="lineno">  160 </span>    <span class="decl"><span class="nottickedoff">gconstructorCount (M1 x) = gconstructorCount x</span></span>
+<span class="lineno">  161 </span>
+<span class="lineno">  162 </span>instance (Constructor c) =&gt; GConstructorCount (C1 c a) where
+<span class="lineno">  163 </span>    <span class="decl"><span class="nottickedoff">gconstructorCount _ = 1</span></span>
+<span class="lineno">  164 </span>
+<span class="lineno">  165 </span>instance (GConstructorCount a, GConstructorCount b) =&gt; GConstructorCount (a :+: b) where
+<span class="lineno">  166 </span>    <span class="decl"><span class="nottickedoff">gconstructorCount (_ :: (a :+: b) r) = gconstructorCount (undefined :: a r) +</span>
+<span class="lineno">  167 </span><span class="spaces">                                           </span><span class="nottickedoff">gconstructorCount (undefined :: b r)</span></span>
+<span class="lineno">  168 </span>
+<span class="lineno">  169 </span>constructorCount :: (Generic a, GConstructorCount (Rep a)) =&gt; a -&gt; Int
+<span class="lineno">  170 </span><span class="decl"><span class="nottickedoff">constructorCount x = gconstructorCount $ from x</span></span>
+
+</pre>
+</body>
+</html>

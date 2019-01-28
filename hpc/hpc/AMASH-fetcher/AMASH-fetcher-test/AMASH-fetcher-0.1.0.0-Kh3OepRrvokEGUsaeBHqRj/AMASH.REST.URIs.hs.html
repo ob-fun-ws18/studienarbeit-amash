@@ -1,0 +1,132 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+span.lineno { color: white; background: #aaaaaa; border-right: solid white 12px }
+span.nottickedoff { background: yellow}
+span.istickedoff { background: white }
+span.tickonlyfalse { margin: -1px; border: 1px solid #f20913; background: #f20913 }
+span.tickonlytrue  { margin: -1px; border: 1px solid #60de51; background: #60de51 }
+span.funcount { font-size: small; color: orange; z-index: 2; position: absolute; right: 20 }
+span.decl { font-weight: bold }
+span.spaces    { background: white }
+</style>
+</head>
+<body>
+<pre>
+<span class="decl"><span class="nottickedoff">never executed</span> <span class="tickonlytrue">always true</span> <span class="tickonlyfalse">always false</span></span>
+</pre>
+<pre>
+<span class="lineno">    1 </span>-- | Contains / Generates URIs for the Atlassian Marketplace REST API.
+<span class="lineno">    2 </span>-- | All of these URIs are for GET calls.
+<span class="lineno">    3 </span>module AMASH.REST.URIs (
+<span class="lineno">    4 </span>        baseURI,
+<span class="lineno">    5 </span>
+<span class="lineno">    6 </span>        app,
+<span class="lineno">    7 </span>        appMetrics,
+<span class="lineno">    8 </span>        appPricing,
+<span class="lineno">    9 </span>        appRecommendations,
+<span class="lineno">   10 </span>        appReviews,
+<span class="lineno">   11 </span>
+<span class="lineno">   12 </span>        apps,
+<span class="lineno">   13 </span>        appsPaged,
+<span class="lineno">   14 </span>        buildRankingURI,
+<span class="lineno">   15 </span>
+<span class="lineno">   16 </span>        vendor,
+<span class="lineno">   17 </span>        vendorContacts,
+<span class="lineno">   18 </span>        vendorAppsPaged,
+<span class="lineno">   19 </span>        vendorArchivedAppsPaged
+<span class="lineno">   20 </span>    ) where
+<span class="lineno">   21 </span>
+<span class="lineno">   22 </span>import AMASH.Constants
+<span class="lineno">   23 </span>
+<span class="lineno">   24 </span>-----------------------------------------------------------------------
+<span class="lineno">   25 </span>
+<span class="lineno">   26 </span>-- | The Atlassian Marketplace REST base URI.
+<span class="lineno">   27 </span>baseURI :: String 
+<span class="lineno">   28 </span><span class="decl"><span class="nottickedoff">baseURI = &quot;https://marketplace.atlassian.com/rest/2&quot;</span></span>
+<span class="lineno">   29 </span>
+<span class="lineno">   30 </span>-----------------------------------------------------------------------
+<span class="lineno">   31 </span>
+<span class="lineno">   32 </span>-- | Provides the Atlassian Marketplace REST base URI.
+<span class="lineno">   33 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-get
+<span class="lineno">   34 </span>app :: String  -&gt; String 
+<span class="lineno">   35 </span><span class="decl"><span class="nottickedoff">app &quot;&quot;       = error &quot;Empty addon key not allowed for URI buildung!&quot;</span>
+<span class="lineno">   36 </span><span class="spaces"></span><span class="nottickedoff">app addonKey = baseURI ++ &quot;/addons/&quot; ++ addonKey</span></span>
+<span class="lineno">   37 </span>
+<span class="lineno">   38 </span>{-
+<span class="lineno">   39 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-get
+<span class="lineno">   40 </span>appVersions :: String  -&gt; String 
+<span class="lineno">   41 </span>appVersions addonKey = app addonKey ++ &quot;/versions&quot;
+<span class="lineno">   42 </span>
+<span class="lineno">   43 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-versions-latest-get
+<span class="lineno">   44 </span>appVersionLatest :: String  -&gt; String 
+<span class="lineno">   45 </span>appVersionLatest addonKey = appVersions addonKey ++ &quot;/latest&quot;
+<span class="lineno">   46 </span>-}
+<span class="lineno">   47 </span>
+<span class="lineno">   48 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-distribution-get
+<span class="lineno">   49 </span>appMetrics :: String  -&gt; String
+<span class="lineno">   50 </span><span class="decl"><span class="nottickedoff">appMetrics addonKey = app addonKey ++ &quot;/distribution&quot;</span></span>
+<span class="lineno">   51 </span>
+<span class="lineno">   52 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-pricing-cloudOrServer-liveOrPending-get
+<span class="lineno">   53 </span>appPricing, appPricing' :: String  -&gt; String  -&gt; String 
+<span class="lineno">   54 </span><span class="decl"><span class="nottickedoff">appPricing addonKey &quot;cloud&quot;      = appPricing' addonKey &quot;cloud&quot;</span>
+<span class="lineno">   55 </span><span class="spaces"></span><span class="nottickedoff">appPricing addonKey &quot;datacenter&quot; = appPricing' addonKey &quot;datacenter&quot;</span>
+<span class="lineno">   56 </span><span class="spaces"></span><span class="nottickedoff">appPricing addonKey &quot;server&quot;     = appPricing' addonKey &quot;server&quot;</span>
+<span class="lineno">   57 </span><span class="spaces"></span><span class="nottickedoff">appPricing addonKey pricingType  = error $ &quot;Illegal pricing type \&quot;&quot; ++ pricingType ++ &quot;\&quot;! Allowed are only: [\&quot;cloud\&quot;, \&quot;datacenter\&quot;, \&quot;server\&quot;].&quot;</span></span>
+<span class="lineno">   58 </span>
+<span class="lineno">   59 </span><span class="decl"><span class="nottickedoff">appPricing' addonKey pricingType = app addonKey ++ &quot;/pricing/&quot; ++ pricingType ++ &quot;/live&quot;</span></span>
+<span class="lineno">   60 </span>
+<span class="lineno">   61 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-recommendations-get
+<span class="lineno">   62 </span>-- | The other apps that appear in the &quot;recommendations&quot; panel below your app.
+<span class="lineno">   63 </span>appRecommendations :: String  -&gt; String 
+<span class="lineno">   64 </span><span class="decl"><span class="nottickedoff">appRecommendations addonKey = app addonKey ++ &quot;/recommendations?limit=25&quot;</span></span>
+<span class="lineno">   65 </span>
+<span class="lineno">   66 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-addons-addonKey-reviews-get
+<span class="lineno">   67 </span>appReviews :: String  -&gt; String 
+<span class="lineno">   68 </span><span class="decl"><span class="nottickedoff">appReviews addonKey = app addonKey ++ &quot;/reviews&quot;</span></span>
+<span class="lineno">   69 </span>
+<span class="lineno">   70 </span>-----------------------------------------------------------------------
+<span class="lineno">   71 </span>
+<span class="lineno">   72 </span>apps :: String
+<span class="lineno">   73 </span><span class="decl"><span class="nottickedoff">apps = baseURI ++ &quot;/addons&quot;</span></span>
+<span class="lineno">   74 </span>
+<span class="lineno">   75 </span>appsPaged :: Integer -&gt; String
+<span class="lineno">   76 </span><span class="decl"><span class="nottickedoff">appsPaged page = baseURI ++ &quot;/addons?&quot; ++ pageParams page</span></span>
+<span class="lineno">   77 </span>
+<span class="lineno">   78 </span>buildRankingURI :: Application -&gt; AppsListFilter -&gt; Integer -&gt; String
+<span class="lineno">   79 </span><span class="decl"><span class="nottickedoff">buildRankingURI application appsListFilter page = apps</span>
+<span class="lineno">   80 </span><span class="spaces">                                        </span><span class="nottickedoff">++ &quot;?application=&quot; ++ showApplication application</span>
+<span class="lineno">   81 </span><span class="spaces">                                        </span><span class="nottickedoff">++ &quot;&amp;filter=&quot; ++ showInKebab appsListFilter</span>
+<span class="lineno">   82 </span><span class="spaces">                                        </span><span class="nottickedoff">++ &quot;&amp;&quot; ++ pageParams page</span></span>
+<span class="lineno">   83 </span>
+<span class="lineno">   84 </span>-----------------------------------------------------------------------
+<span class="lineno">   85 </span>
+<span class="lineno">   86 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-vendors-vendorId-get
+<span class="lineno">   87 </span>vendor :: String -&gt; String
+<span class="lineno">   88 </span><span class="decl"><span class="nottickedoff">vendor vendorId = baseURI ++ &quot;/vendors/&quot; ++ vendorId</span></span>
+<span class="lineno">   89 </span>
+<span class="lineno">   90 </span>-- | https://developer.atlassian.com/platform/marketplace/rest/#api-vendors-vendorId-contacts-get
+<span class="lineno">   91 </span>vendorContacts :: String -&gt; String
+<span class="lineno">   92 </span><span class="decl"><span class="nottickedoff">vendorContacts vendorId = vendor vendorId ++ &quot;/contacts&quot;</span></span>
+<span class="lineno">   93 </span>
+<span class="lineno">   94 </span>vendorApps :: String -&gt; String
+<span class="lineno">   95 </span><span class="decl"><span class="nottickedoff">vendorApps vendorId = baseURI ++ &quot;/addons/vendor/&quot; ++ vendorId</span></span>
+<span class="lineno">   96 </span>
+<span class="lineno">   97 </span>vendorAppsPaged :: String -&gt; Integer -&gt; String
+<span class="lineno">   98 </span><span class="decl"><span class="nottickedoff">vendorAppsPaged vendorId page = vendorApps vendorId ++ &quot;?&quot; ++ pageParams page</span></span>
+<span class="lineno">   99 </span>
+<span class="lineno">  100 </span>vendorArchivedApps :: String -&gt; String
+<span class="lineno">  101 </span><span class="decl"><span class="nottickedoff">vendorArchivedApps vendorId = baseURI ++ &quot;/addons/archived/vendor/&quot; ++ vendorId</span></span>
+<span class="lineno">  102 </span>
+<span class="lineno">  103 </span>vendorArchivedAppsPaged :: String -&gt; Integer -&gt; String
+<span class="lineno">  104 </span><span class="decl"><span class="nottickedoff">vendorArchivedAppsPaged vendorId page = vendorArchivedApps vendorId ++ &quot;?&quot; ++ pageParams page</span></span>
+<span class="lineno">  105 </span>
+<span class="lineno">  106 </span>-----------------------------------------------------------------------
+<span class="lineno">  107 </span>
+<span class="lineno">  108 </span>pageParams :: Integer -&gt; String
+<span class="lineno">  109 </span><span class="decl"><span class="nottickedoff">pageParams page = &quot;limit=&quot; ++ show resultsPerPage ++ &quot;&amp;offset=&quot; ++ show (page * resultsPerPage)</span></span>
+
+</pre>
+</body>
+</html>
