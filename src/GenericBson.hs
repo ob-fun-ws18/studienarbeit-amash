@@ -1,8 +1,3 @@
-{-
-Original work from: http://hackage.haskell.org/package/bson-generic-0.0.8.1/docs/src/Data-Bson-Generic.html
-Package was incompatible/unmaintained with so I fixed the problems and just kept the source code here.
--}
-
 {-# LANGUAGE DeriveGeneric          #-}
 {-# LANGUAGE DefaultSignatures      #-}
 {-# LANGUAGE TypeOperators          #-}
@@ -14,6 +9,7 @@ Package was incompatible/unmaintained with so I fixed the problems and just kept
 {-# LANGUAGE ScopedTypeVariables    #-}
 {-# LANGUAGE OverlappingInstances   #-}
 
+-- | Original: http://hackage.haskell.org/package/bson-generic-0.0.8.1/docs/src/Data-Bson-Generic.html - Package was incompatible/unmaintained with so I fixed the problems and just kept the source code here.
 module GenericBson (
     ToBSON(..),
     FromBSON(..),
