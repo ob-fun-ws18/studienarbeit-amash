@@ -2,3 +2,4 @@
 AMASH.cabal
 *~
 .idea/
+.vagrant/

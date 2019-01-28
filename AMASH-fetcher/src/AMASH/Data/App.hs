@@ -1,13 +1,14 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module AMASH.Types.App where
+module AMASH.Data.App where
 
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import Data.Time.Clock
 
-import AMASH.Types.App.VendorLinks
-import AMASH.Types.App.AppEmbedded
+import AMASH.Data.App.VendorLinks
+import AMASH.Data.App.AppEmbedded
 
 data App = App { name :: Text
                , key :: Text
@@ -15,7 +16,7 @@ data App = App { name :: Text
                , tagLine :: Text
                , vendorLinks :: VendorLinks
                , _embedded :: AppEmbedded
-               , lastModified :: Text -- format: date-time e.g.: "2018-10-03T00:17:34.548Z"
+               , lastModified :: UTCTime
                } deriving (Show, Eq, Generic)
 
 instance FromJSON App

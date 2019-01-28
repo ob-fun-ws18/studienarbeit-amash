@@ -1,10 +1,11 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module AMASH.Types.App.VendorLinks where
+module AMASH.Data.App.VendorLinks where
 
 import Data.Text
 import Data.Aeson
 import GHC.Generics
+import GenericBson
 
 data VendorLinks = VendorLinks { issueTracker :: Maybe Text
                                , supportTicketSystem :: Maybe Text
@@ -15,3 +16,5 @@ data VendorLinks = VendorLinks { issueTracker :: Maybe Text
 
 instance FromJSON VendorLinks
 instance ToJSON VendorLinks
+instance FromBSON VendorLinks
+instance ToBSON VendorLinks

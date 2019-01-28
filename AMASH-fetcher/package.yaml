@@ -25,6 +25,11 @@ dependencies:
 - text
 - bytestring
 - http-conduit
+- time
+- mongoDB
+- mtl
+- bson
+- ghc-prim
 
 library:
   source-dirs: src

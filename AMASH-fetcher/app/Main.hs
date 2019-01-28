@@ -2,34 +2,25 @@
 
 module Main where
 
-import Data.Aeson
-import Data.Text
-import Control.Applicative
-import Control.Monad
-import Network.HTTP.Conduit (simpleHttp)
-
-import Lib (readConfig)
-
-import AMASH.Types.App
-import qualified AMASH.URIs as URIs
+import AMASH
+import Control.Monad (unless, when)
+import System.Environment
 
 main :: IO ()
-main = readConfig >>= mapM_ getPluginData
+main = do
+    args <- getArgs
 
--- | Gets and prints the data for a given plugin key (e.g. "de.scandio.confluence.plugins.pocketquery")
-getPluginData :: String -> IO ()
-getPluginData plugin = do
-    let uri = URIs.app plugin
-        getJSON = simpleHttp uri -- TODO: error handling on HTTP code 4xx
+    let missingArgsMessage = "Missing arg! Supply at least one of the following args to the program: " ++ show validProgramArgs
+    unless (not $ validProgramArgs `elemAtLeastOne` args) (error missingArgsMessage)
 
-    e <- (eitherDecode <$> getJSON) :: IO (Either String App)
+    pipe <- openConnection
+    authenticated <- authenticate pipe
 
-    case e of
-        Left err -> putStrLn err
-        Right appInfo -> do
-            putStrLn "\n------------------------------"
-            putStrLn "Got AppInfo for: "
-            print $ name appInfo
-            putStrLn ""
-            print appInfo
-            putStrLn "------------------------------"
+    if authenticated
+    then do
+        when (["--setup",    "-s"] `elemAtLeastOne` args) (runSetup pipe)
+        when (["--rankings", "-r"] `elemAtLeastOne` args) (fetchRankings pipe)
+        when (["--vendors",  "-v"] `elemAtLeastOne` args) (fetchVendors pipe)
+        when (["--apps",     "-a"] `elemAtLeastOne` args) (fetchApps pipe)
+        putStrLn "Successfully finished. Exiting."
+    else putStrLn "Authentication failed! Are the credentials set in your ENV correct?"

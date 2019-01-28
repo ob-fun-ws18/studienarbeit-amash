@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 53433d4ba7b73cb51e368ca68339e2e19da6e6bddf6ffc661fabf4a5dade7b77
+-- hash: 272e0f2596b575787824125ea6525d77276d7da01c03f52ace392c115ca00a69
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -25,13 +25,49 @@ source-repository head
 
 library
   exposed-modules:
-      AMASH.Types.App
-      AMASH.Types.App.AddonCategorySummary
-      AMASH.Types.App.AddonDistributionSummary
-      AMASH.Types.App.AppEmbedded
-      AMASH.Types.App.ImageAssetSummary
-      AMASH.Types.App.VendorLinks
-      AMASH.URIs
+      AMASH
+      AMASH.Config
+      AMASH.Constants
+      AMASH.Data.App
+      AMASH.Data.App.AddonCategorySummary
+      AMASH.Data.App.AppEmbedded
+      AMASH.Data.App.ImageAssetSummary
+      AMASH.Data.App.StorableImageAssetSummary
+      AMASH.Data.App.VendorLinks
+      AMASH.Data.AppMetrics
+      AMASH.Data.AppsList
+      AMASH.Data.StorableApp
+      AMASH.Data.Vendor
+      AMASH.Data.Vendor.Address
+      AMASH.Data.Vendor.StorableVendorContact
+      AMASH.Data.Vendor.VendorCloudSecurity
+      AMASH.Data.Vendor.VendorContacts
+      AMASH.Data.Vendor.VendorExternalLinks
+      AMASH.Data.Vendor.VendorPrograms
+      AMASH.Data.Vendor.VendorSolutionPartner
+      AMASH.Data.Vendor.VendorSupportDetails
+      AMASH.MongoDB
+      AMASH.MongoDB.App
+      AMASH.MongoDB.AppRecommendations
+      AMASH.MongoDB.Connection
+      AMASH.MongoDB.Helpers
+      AMASH.MongoDB.Querys
+      AMASH.MongoDB.Querys.GetLastSaved
+      AMASH.MongoDB.Querys.Select
+      AMASH.MongoDB.Querys.TrackedKeys
+      AMASH.MongoDB.Rankings
+      AMASH.MongoDB.Setup
+      AMASH.MongoDB.VendorApps
+      AMASH.MongoDB.VendorContacts
+      AMASH.MongoDB.VendorMetaData
+      AMASH.REST
+      AMASH.REST.AppKeys
+      AMASH.REST.FetchRecord
+      AMASH.REST.Rankings
+      AMASH.REST.URIs
+      AMASH.REST.VendorApps
+      AMASH.Util
+      GenericBson
       Lib
   other-modules:
       Paths_AMASH_fetcher
@@ -40,9 +76,14 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
+    , ghc-prim
     , http-conduit
+    , mongoDB
+    , mtl
     , text
+    , time
   default-language: Haskell2010
 
 executable AMASH-fetcher-exe
@@ -56,9 +97,14 @@ executable AMASH-fetcher-exe
       AMASH-fetcher
     , aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
+    , ghc-prim
     , http-conduit
+    , mongoDB
+    , mtl
     , text
+    , time
   default-language: Haskell2010
 
 test-suite AMASH-fetcher-test
@@ -75,10 +121,15 @@ test-suite AMASH-fetcher-test
     , QuickCheck
     , aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
+    , ghc-prim
     , hspec
     , http-conduit
+    , mongoDB
+    , mtl
     , text
+    , time
   default-language: Haskell2010
 
 benchmark AMASH-fetcher-benchmark
@@ -93,8 +144,13 @@ benchmark AMASH-fetcher-benchmark
       AMASH-fetcher
     , aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
     , criterion
+    , ghc-prim
     , http-conduit
+    , mongoDB
+    , mtl
     , text
+    , time
   default-language: Haskell2010
