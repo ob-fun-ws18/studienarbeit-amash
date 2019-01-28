@@ -13,7 +13,6 @@ import qualified AMASH.Data.Vendor as Vendor
 import qualified AMASH.Data.StorableApp as StorableApp
 import qualified AMASH.REST.URIs as URIs
 
--- TODO: Remove this (just here for benchmark and test example)
 -- | Calculate the square of a number.
 square :: Num a
     => a -- ^ The number
@@ -24,7 +23,7 @@ square n = n^2
 fetchVendorMetaData :: String -> IO ()
 fetchVendorMetaData vendorId = do
     let uri = URIs.vendor vendorId
-        getJSON = simpleHttp uri -- TODO: error handling on HTTP code 4xx via try / catch
+        getJSON = simpleHttp uri
 
     e <- (eitherDecode <$> getJSON) :: IO (Either String Vendor.Vendor)
 
@@ -40,7 +39,7 @@ fetchVendorMetaData vendorId = do
 fetchPluginMetaData :: String -> IO ()
 fetchPluginMetaData pluginKey = do
     let uri = URIs.app pluginKey
-        getJSON = simpleHttp uri -- TODO: error handling on HTTP code 4xx via try / catch
+        getJSON = simpleHttp uri
 
     e <- (eitherDecode <$> getJSON) :: IO (Either String App.App)
 
@@ -51,5 +50,5 @@ fetchPluginMetaData pluginKey = do
             putStrLn "Got AppInfo for: "
             print $ App.name appInfo
             putStrLn ""
-            print {-$ toEncoding-} $ StorableApp.createStorableApp appInfo
+            print $ StorableApp.createStorableApp appInfo
             putStrLn "------------------------------"

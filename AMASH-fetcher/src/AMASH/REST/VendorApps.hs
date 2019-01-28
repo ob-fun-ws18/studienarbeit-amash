@@ -25,7 +25,7 @@ fetchVendorArchivedApps vendorId = do
 
 fetchVendorApps' pagedUri currentPage = do
     let uri = pagedUri currentPage
-        getJSON = simpleHttp uri -- TODO: error handling on HTTP code 4xx via try / catch
+        getJSON = simpleHttp uri
 
     e <- (eitherDecode <$> getJSON) :: IO (Either String AppsListResponse)
 

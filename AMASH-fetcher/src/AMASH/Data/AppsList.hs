@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric #-} -- TODO: remove
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module AMASH.Data.AppsList where

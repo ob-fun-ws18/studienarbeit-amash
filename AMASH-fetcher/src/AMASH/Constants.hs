@@ -11,8 +11,6 @@ validProgramArgs = ["-s", "--setup", "-a", "--apps", "-v", "--vendors", "-r", "-
 showInKebab :: Show a => a -> String
 showInKebab = toKebabCase . show
 
--- TODO: toKebabCase kann man prima testen
--- TODO: move to AMASH.Util !!!
 -- Need a CamelCase to KebabCase converter for the AppsListFilters
 toKebabCase []     = []
 toKebabCase [x]    = [toLower x]
@@ -60,5 +58,3 @@ instance Show Hosting where
     show Server = "server"
     show Cloud = "cloud"
     show DataCenter = "dataCenter"
-
--- TODO: Kategorien sind HTML encodiert... Wie lösen? Gehören die überhaupt hier rein?

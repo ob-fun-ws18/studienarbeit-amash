@@ -2,7 +2,6 @@ module AMASH.Util where
 
 import AMASH.Constants
 
--- TODO: write tests for this!
 showRanking :: Application
             -> AppsListFilter
             -> String
@@ -13,7 +12,6 @@ showRanking application category =
 
 rankingsCollectionName application rankingCategory = "rankings-" ++ showApplication application ++ "-" ++ showInKebab rankingCategory
 
--- TODO: write tests for this!
 -- | Given two lists tests if at least one element of the first list is also an element of the second list.
 elemAtLeastOne :: (Eq a)
                => [a]  -- ^ The first list.

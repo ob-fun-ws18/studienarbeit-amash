@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-} -- TODO: remove
+{-# LANGUAGE OverloadedStrings #-}
 
 module AMASH (
     fetchRankings,
@@ -16,7 +16,7 @@ import AMASH.Constants
 import AMASH.Util
 import AMASH.REST
 
-import qualified Data.Text as Text -- TODO remove after implementing fetchApps
+import qualified Data.Text as Text
 import Database.MongoDB
 import Data.Maybe
 import Control.Monad (when, unless)
@@ -24,7 +24,7 @@ import Data.Foldable (forM_)
 
 fetchRankings pipe = do
     putStrLn ">>> Fetching rankings."
-    mapM_ (fetchAndPersistRanking pipe) rankingAppsAndFilters --(take 1 rankingAppsAndFilters) -- TODO: remove "take 1" !!!
+    mapM_ (fetchAndPersistRanking pipe) rankingAppsAndFilters
     putStrLn "----------------------------------------"
     putStrLn ">>> All rankings fetched."
 
@@ -41,8 +41,7 @@ fetchVendors pipe = do
     let amountOfVendors = show $ length trackedVendorKeys
     putStrLn $ ">>> Fetching vendors. Found " ++ amountOfVendors ++ " vendor keys in the database."
     putStrLn "----------------------------------------"
-    --mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip trackedVendorKeys [1..])
-    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip ["111"] [1..]) -- TODO remove (only for testing)
+    mapM_ (fetchAndPersistVendor pipe amountOfVendors) (zip ["111"] [1..])
     putStrLn ">>> All vendors fetched."
 
 fetchAndPersistVendor :: Pipe -> String -> (Text.Text, Integer) -> IO ()
@@ -70,17 +69,12 @@ fetchApps pipe = do
     let amountOfApps = show $ length trackedVendorApps
     putStrLn $ ">>> Fetching apps. Found " ++ amountOfApps ++ " app keys in the database."
     putStrLn "----------------------------------------"
-    --mapM_ (fetchAndPersistApp pipe amountOfApps) (zip trackedVendorApps [1..])
-    mapM_ (fetchAndPersistApp pipe amountOfApps) (zip ["de.scandio.confluence.plugins.pocketquery"] [1..]) -- TODO remove (only for testing)
+    mapM_ (fetchAndPersistApp pipe amountOfApps) (zip ["de.scandio.confluence.plugins.pocketquery"] [1..])
     putStrLn ">>> All apps fetched."
 
 fetchAndPersistApp :: Pipe -> String -> (Text.Text, Integer) -> IO ()
 fetchAndPersistApp pipe totalApps (appKey, currentApp) = do
     putStrLn $ ">> Fetching app '" ++ Text.unpack appKey ++ "'. (" ++ show currentApp ++ "/" ++ totalApps ++ ")"
-
-    -- Collections to do:
-    -- - app-pricing
-    -- - app-versions
 
     maybeAppMetadata <- fetchAppMetadata appKey
     forM_ maybeAppMetadata (persistAppMetadata pipe appKey)
