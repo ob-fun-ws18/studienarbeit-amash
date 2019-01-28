@@ -29,13 +29,13 @@ install:
 script:
 # Build the package, its tests and run the tests
 - stack --no-terminal test --haddock --no-haddock-deps --coverage
-- mkdir -p ./docs/doc
-- mv `stack path --local-doc-root` ./docs/doc
-- stack bench --benchmark-arguments="-o ./docs/report.html"
-- mkdir -p ./docs/hpc
-- mv `stack path --local-hpc-root` ./docs/hpc
+- mkdir -p docs/doc
+- mv `stack path --local-doc-root` docs/doc
+- stack bench --benchmark-arguments="-o docs/report.html"
+- mkdir -p docs/hpc
+- mv `stack path --local-hpc-root` docs/hpc
 - travis_retry curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s .
-- ln -s 'stack path --local-doc-root' ./docs
+- ln -s 'stack path --local-doc-root' docs
 
 deploy:
   provider: pages # speziell für GitHub Pages
