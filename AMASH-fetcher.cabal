@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 272e0f2596b575787824125ea6525d77276d7da01c03f52ace392c115ca00a69
+-- hash: 695ac125c998c38be5d9b85c29912ac6831843965a171c49aee0d29a2609fd2c
 
 name:           AMASH-fetcher
 version:        0.1.0.0
@@ -13,6 +13,7 @@ author:         Sven Schatter
 maintainer:     sven.schatter@gmail.com
 copyright:      2018 Sven Schatter
 license:        BSD3
+license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
 extra-source-files:
